@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="ufC-wZ-h7g">
+            <objects>
+                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
+                        <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5nO-DM-4p6" customClass="TabPage" customModule="SwiftTabPager">
+                                <rect key="frame" x="20" y="44" width="374" height="50"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="cB1-Y6-zRJ"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G5l-Xb-C4W" customClass="TabPage" customModule="SwiftTabPager">
+                                <rect key="frame" x="20" y="104" width="374" height="50"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="L7S-t1-r0L"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="indicatorSizeFitTitleWidth" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1hI-nK-iuy" customClass="TabPage" customModule="SwiftTabPager">
+                                <rect key="frame" x="20" y="164" width="374" height="50"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="w71-Ku-0Sj"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="selectedTextColor">
+                                        <color key="value" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="unselectedTextColor">
+                                        <color key="value" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="animationDuration">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XnM-5V-MH9" customClass="TabPage" customModule="SwiftTabPager">
+                                <rect key="frame" x="20" y="224" width="374" height="50"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="Mv9-6Z-NpM"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="indicatorColor">
+                                        <color key="value" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="28R-DE-d01" customClass="TabPage" customModule="SwiftTabPager">
+                                <rect key="frame" x="20" y="284" width="374" height="50"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="4xB-nX-b5x"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="indicatorIsAtBottom" value="NO"/>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="selectedBackgroundColor">
+                                        <color key="value" systemColor="systemGrayColor" red="0.5568627451" green="0.5568627451" blue="0.57647058819999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="indicatorOffset">
+                                        <real key="value" value="9"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="indicatorSizeFitTitleWidth" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hPZ-79-90W" customClass="TabPage" customModule="SwiftTabPager">
+                                <rect key="frame" x="20" y="344" width="374" height="50"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="YnH-ap-V38"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="selectedBackgroundColor">
+                                        <color key="value" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="unselectedTextColor">
+                                        <color key="value" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="unselectedBackgroundColor">
+                                        <color key="value" systemColor="systemYellowColor" red="1" green="0.80000000000000004" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="indicatorOffset">
+                                        <real key="value" value="-8"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="indicatorWidth">
+                                        <real key="value" value="51"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="72m-3S-Qu7" customClass="TabPage" customModule="SwiftTabPager">
+                                <rect key="frame" x="20" y="404" width="374" height="50"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="CmO-uX-EIN"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="itemBorderWidth">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="indicatorWidth">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4nT-0m-WTg" customClass="TabPage" customModule="SwiftTabPager">
+                                <rect key="frame" x="20" y="464" width="374" height="50"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="hHc-Qa-ywU"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="itemBorderWidth">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="horizontalSpacing">
+                                        <real key="value" value="14"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="indicatorWidth">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ctb-ZZ-06l" customClass="TabPage" customModule="SwiftTabPager">
+                                <rect key="frame" x="20" y="524" width="374" height="50"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="ryb-xl-Mnm"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="itemBorderWidth">
+                                        <real key="value" value="2"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="horizontalSpacing">
+                                        <real key="value" value="14"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="horizontalSpacingFromBorders" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="indicatorWidth">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qBe-4w-Slq" customClass="TabPage" customModule="SwiftTabPager">
+                                <rect key="frame" x="20" y="584" width="374" height="50"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="eFZ-th-gqY"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="itemBorderWidth">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="horizontalSpacing">
+                                        <real key="value" value="14"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="horizontalSpacingFromBorders" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="barBorderWidth">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="verticalSpacing">
+                                        <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="barBorderColor">
+                                        <color key="value" systemColor="linkColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="itemBorderColor">
+                                        <color key="value" systemColor="systemGreenColor" red="0.20392156859999999" green="0.78039215689999997" blue="0.34901960780000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="itemBorderCornerRadius">
+                                        <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="barBorderCornerRadius">
+                                        <real key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="indicatorWidth">
+                                        <real key="value" value="0.0"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="72m-3S-Qu7" firstAttribute="top" secondItem="hPZ-79-90W" secondAttribute="bottom" constant="10" id="2ns-qa-ZSQ"/>
+                            <constraint firstItem="28R-DE-d01" firstAttribute="trailing" secondItem="kh9-bI-dsS" secondAttribute="trailingMargin" id="3Hq-Jx-bS3"/>
+                            <constraint firstItem="ctb-ZZ-06l" firstAttribute="trailing" secondItem="kh9-bI-dsS" secondAttribute="trailingMargin" id="7Wd-4X-egQ"/>
+                            <constraint firstItem="28R-DE-d01" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="8fU-dC-HPa"/>
+                            <constraint firstItem="4nT-0m-WTg" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="Bvl-Ij-fGX"/>
+                            <constraint firstItem="hPZ-79-90W" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="Hw8-54-GQK"/>
+                            <constraint firstItem="qBe-4w-Slq" firstAttribute="trailing" secondItem="kh9-bI-dsS" secondAttribute="trailingMargin" id="I9s-PB-Sdn"/>
+                            <constraint firstItem="ctb-ZZ-06l" firstAttribute="top" secondItem="4nT-0m-WTg" secondAttribute="bottom" constant="10" id="JHY-Ic-cyM"/>
+                            <constraint firstItem="4nT-0m-WTg" firstAttribute="trailing" secondItem="kh9-bI-dsS" secondAttribute="trailingMargin" id="Jb8-SD-268"/>
+                            <constraint firstItem="ctb-ZZ-06l" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="KvL-9l-JZu"/>
+                            <constraint firstItem="1hI-nK-iuy" firstAttribute="top" secondItem="G5l-Xb-C4W" secondAttribute="bottom" constant="10" id="LH2-Nv-V0a"/>
+                            <constraint firstItem="72m-3S-Qu7" firstAttribute="trailing" secondItem="kh9-bI-dsS" secondAttribute="trailingMargin" id="MgU-bu-XR7"/>
+                            <constraint firstItem="qBe-4w-Slq" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="PBp-Ot-g7z"/>
+                            <constraint firstItem="G5l-Xb-C4W" firstAttribute="trailing" secondItem="kh9-bI-dsS" secondAttribute="trailingMargin" id="QGq-S6-MTc"/>
+                            <constraint firstItem="5nO-DM-4p6" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" id="RO7-ev-Wbw"/>
+                            <constraint firstItem="4nT-0m-WTg" firstAttribute="top" secondItem="72m-3S-Qu7" secondAttribute="bottom" constant="10" id="SjP-hX-oqL"/>
+                            <constraint firstItem="5nO-DM-4p6" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="TgZ-a2-X6j"/>
+                            <constraint firstItem="28R-DE-d01" firstAttribute="top" secondItem="XnM-5V-MH9" secondAttribute="bottom" constant="10" id="U3o-9s-VgN"/>
+                            <constraint firstItem="XnM-5V-MH9" firstAttribute="top" secondItem="1hI-nK-iuy" secondAttribute="bottom" constant="10" id="UdV-us-NSl"/>
+                            <constraint firstItem="G5l-Xb-C4W" firstAttribute="top" secondItem="5nO-DM-4p6" secondAttribute="bottom" constant="10" id="Y1X-ey-Zp5"/>
+                            <constraint firstItem="G5l-Xb-C4W" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="ZFy-fA-o16"/>
+                            <constraint firstItem="hPZ-79-90W" firstAttribute="top" secondItem="28R-DE-d01" secondAttribute="bottom" constant="10" id="ev6-ZM-oO7"/>
+                            <constraint firstItem="1hI-nK-iuy" firstAttribute="trailing" secondItem="kh9-bI-dsS" secondAttribute="trailingMargin" id="gfp-5E-gWy"/>
+                            <constraint firstItem="1hI-nK-iuy" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="iLB-gd-zWp"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="5nO-DM-4p6" secondAttribute="trailing" id="ipg-ya-39k"/>
+                            <constraint firstItem="qBe-4w-Slq" firstAttribute="top" secondItem="ctb-ZZ-06l" secondAttribute="bottom" constant="10" id="tKh-hg-DON"/>
+                            <constraint firstItem="XnM-5V-MH9" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="w6O-AJ-xFD"/>
+                            <constraint firstItem="hPZ-79-90W" firstAttribute="trailing" secondItem="kh9-bI-dsS" secondAttribute="trailingMargin" id="wbC-7i-ua9"/>
+                            <constraint firstItem="72m-3S-Qu7" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="yIV-c8-TeR"/>
+                            <constraint firstItem="XnM-5V-MH9" firstAttribute="trailing" secondItem="kh9-bI-dsS" secondAttribute="trailingMargin" id="zzC-O8-1sF"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outletCollection property="tabPagesCollection" destination="5nO-DM-4p6" collectionClass="NSMutableArray" id="yPn-vR-qX6"/>
+                        <outletCollection property="tabPagesCollection" destination="G5l-Xb-C4W" collectionClass="NSMutableArray" id="c5s-Gt-AT5"/>
+                        <outletCollection property="tabPagesCollection" destination="1hI-nK-iuy" collectionClass="NSMutableArray" id="WZZ-hy-Cg4"/>
+                        <outletCollection property="tabPagesCollection" destination="XnM-5V-MH9" collectionClass="NSMutableArray" id="EDd-AN-fvo"/>
+                        <outletCollection property="tabPagesCollection" destination="28R-DE-d01" collectionClass="NSMutableArray" id="rkC-sW-TgR"/>
+                        <outletCollection property="tabPagesCollection" destination="hPZ-79-90W" collectionClass="NSMutableArray" id="u9c-RJ-tLA"/>
+                        <outletCollection property="tabPagesCollection" destination="72m-3S-Qu7" collectionClass="NSMutableArray" id="lzY-bJ-J65"/>
+                        <outletCollection property="tabPagesCollection" destination="4nT-0m-WTg" collectionClass="NSMutableArray" id="Ofl-jm-tGA"/>
+                        <outletCollection property="tabPagesCollection" destination="ctb-ZZ-06l" collectionClass="NSMutableArray" id="xdN-bq-GMZ"/>
+                        <outletCollection property="tabPagesCollection" destination="qBe-4w-Slq" collectionClass="NSMutableArray" id="7i7-QP-yi8"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="504" y="139"/>
+        </scene>
+    </scenes>
+</document>
