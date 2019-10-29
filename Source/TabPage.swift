@@ -7,8 +7,6 @@
 //
 
 import UIKit
-// import IBPCollectionViewCompositionalLayout
-// import Closures
 
 @IBDesignable
 public class TabPage: UIView {
@@ -90,7 +88,45 @@ public class TabPage: UIView {
     private let selectedLineView = UIView()
     private var selectedLineViewCenterXAnchor: NSLayoutConstraint?
     private var selectedLineViewWidthAnchor: NSLayoutConstraint?
+    private var controllers: [UIViewController]?
 
+    private var offsetToken: NSKeyValueObservation?
+
+    private var scrollView: UIScrollView? {
+        didSet {
+            guard let scrollView = scrollView else { return }
+//            scrollView.delegate = self
+            offsetToken = scrollView.observe(\.contentOffset) { [weak self] (scrollView, _) in
+                guard let self = self else { return }
+                guard let itemTitles = self.itemTitles, let segmentButtons = self.segmentButtons else { return }
+                let contentOffset = scrollView.contentOffset
+                print(contentOffset)
+                self.selectedLineViewCenterXAnchor?.isActive = false
+                let constant = (scrollView.frame.size.width / CGFloat(itemTitles.count * 2)) * CGFloat(((contentOffset.x / scrollView.frame.width) * 2) + 1)
+                self.selectedLineViewCenterXAnchor = self.selectedLineView.centerXAnchor.constraint(equalTo: scrollView.leftAnchor, constant: constant)
+                self.self.selectedLineViewCenterXAnchor?.isActive = true
+                
+                let index = Int(constant / (scrollView.frame.width / CGFloat(itemTitles.count)))
+                guard index != self.selectedIndex else { return }
+                self.self.selectedIndex = index
+                
+                if self.indicatorSizeFitTitleWidth {
+                    let button = segmentButtons[index]
+                    guard let string = button.titleLabel?.text else { fatalError("missing title on button, title is required for width calculation") }
+                    guard let font = button.titleLabel?.font else { fatalError("missing dont on button, title is required for width calculation") }
+                    let size = string.size(withAttributes: [NSAttributedString.Key.font: font])
+                    self.selectedLineViewWidthAnchor?.isActive = false
+                    self.selectedLineViewWidthAnchor = self.selectedLineView.widthAnchor.constraint(equalToConstant: size.width)
+                    self.self.selectedLineViewWidthAnchor?.isActive = true
+                }
+                self.segmentViewAction?(index)
+            }
+            scrollView.isPagingEnabled = true
+            scrollView.showsHorizontalScrollIndicator = false
+            scrollView.showsVerticalScrollIndicator = false
+        }
+    }
+    
     public override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         setTitles(titles: ["One", "Two", "Three"]) { _ in }
@@ -99,6 +135,14 @@ public class TabPage: UIView {
     public func setTitles(titles: [String], completion: @escaping SegmentedViewHandler) {
         itemTitles = titles.filter({ !$0.isEmpty })
         segmentViewAction = completion
+    }
+    
+    public func setWithControllersOn(scrollView: UIScrollView, data: [(title: String, controller: UIViewController)], completion: @escaping SegmentedViewHandler) {
+        itemTitles = data.compactMap({$0.title})
+        segmentViewAction = completion
+        self.scrollView = scrollView
+        self.controllers = data.compactMap({$0.controller})
+        setupControllers()
     }
 
     private func createButtons() {
@@ -153,14 +197,58 @@ public class TabPage: UIView {
             selectedLineView.topAnchor.constraint(equalTo: topAnchor, constant: indicatorOffset).isActive = true
         }
     }
+    
+    private func setupControllers() {
+        guard let scrollView = scrollView, let controllers = controllers else { return }
+        let bgView = UIView()
+        scrollView.addSubview(bgView)
+        bgView.backgroundColor = .yellow
+        bgView.translatesAutoresizingMaskIntoConstraints = false
+        bgView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
+        bgView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
+        bgView.leftAnchor.constraint(equalTo: scrollView.leftAnchor).isActive = true
+        bgView.rightAnchor.constraint(equalTo: scrollView.rightAnchor).isActive = true
+        let widthConstraint = bgView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        widthConstraint.priority = UILayoutPriority(rawValue: 750)
+        widthConstraint.isActive = true
+        bgView.heightAnchor.constraint(equalTo: scrollView.heightAnchor).isActive = true
+        for i in 0 ..< controllers.count {
+            //            scrollView.parentContainerViewController()?.addChild(controllers[i])
+            //            controllers[i].didMove(toParent: scrollView.parentContainerViewController())
+            guard let view = controllers[i].view else { return }
+            view.translatesAutoresizingMaskIntoConstraints = false
+            view.tag = i + 1
+            bgView.addSubview(view)
+            view.topAnchor.constraint(equalTo: bgView.topAnchor).isActive = true
+            view.bottomAnchor.constraint(equalTo: bgView.bottomAnchor).isActive = true
+            view.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+            if i == 0 {
+                view.leftAnchor.constraint(equalTo: bgView.leftAnchor).isActive = true
+            } else {
+                let preview = bgView.viewWithTag(i)!
+                view.leftAnchor.constraint(equalTo: preview.rightAnchor).isActive = true
+                view.widthAnchor.constraint(equalTo: preview.widthAnchor).isActive = true
+            }
+            if i == controllers.count - 1 {
+                view.rightAnchor.constraint(equalTo: bgView.rightAnchor).isActive = true
+            }
+        }
+    }
 
     @objc private func appNavigationButtonAction(_ sender: UIButton) {
         selectedIndex = sender.tag - 1
-        UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseOut, animations: {
-            self.scrollSelectedLineToIndex(index: self.selectedIndex)
-            self.layoutSubviews()
-        }, completion: nil)
-        segmentViewAction?(selectedIndex)
+        if let scrollView = scrollView {
+            var frame = scrollView.bounds
+            frame.origin.x = frame.size.width * CGFloat(selectedIndex)
+            scrollView.scrollRectToVisible(frame, animated: true)
+        } else {
+            UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseOut, animations: {
+                self.scrollSelectedLineToIndex(index: self.selectedIndex)
+                self.layoutSubviews()
+            }, completion: nil)
+            segmentViewAction?(selectedIndex)
+        }
+
     }
 
     private func scrollSelectedLineToIndex(index: Int) {
@@ -183,39 +271,4 @@ public class TabPage: UIView {
         }
     }
 
-    fileprivate class TabButton: UIButton {
-        override var isEnabled: Bool {
-            didSet {
-                setButton(isEnabled: isEnabled)
-            }
-        }
-
-        private var selectedTitleColor: UIColor
-        private var selectedBackgroundColor: UIColor
-        private var unselectedTitleColor: UIColor
-        private var unselectedBackgroundColor: UIColor
-
-        init(selectedColor: (title: UIColor, background: UIColor), unselectedColor: (title: UIColor, background: UIColor)) {
-            selectedTitleColor = selectedColor.title
-            selectedBackgroundColor = selectedColor.background
-            unselectedTitleColor = unselectedColor.title
-            unselectedBackgroundColor = unselectedColor.background
-            super.init(frame: CGRect.zero)
-            setButton(isEnabled: isEnabled)
-        }
-
-        required init?(coder aDecoder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
-
-        private func setButton(isEnabled: Bool) {
-            if !isEnabled {
-                setTitleColor(selectedTitleColor, for: .normal)
-                backgroundColor = selectedBackgroundColor
-            } else {
-                setTitleColor(unselectedTitleColor, for: .normal)
-                backgroundColor = unselectedBackgroundColor
-            }
-        }
-    }
 }

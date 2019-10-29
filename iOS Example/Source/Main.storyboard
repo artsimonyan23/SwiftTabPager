@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="hhQ-aM-lHs">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -7,10 +7,119 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Table View Controller-->
+        <scene sceneID="wkI-kA-lXR">
+            <objects>
+                <tableViewController id="Uep-kJ-7Br" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="apd-U3-p5i">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <sections>
+                            <tableViewSection id="JtS-IV-2w3">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="KN8-qe-UHP" style="IBUITableViewCellStyleDefault" id="y5q-ER-bO3">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="y5q-ER-bO3" id="cdb-Ua-pfM">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="TabBars" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="KN8-qe-UHP">
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="vXZ-lx-hvc" kind="show" id="gXF-bP-Rwl"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" textLabel="4du-ZD-woY" style="IBUITableViewCellStyleDefault" id="K7O-gM-Ofh">
+                                        <rect key="frame" x="0.0" y="71.5" width="414" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="K7O-gM-Ofh" id="kym-CQ-zhr">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="ScrollView" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="4du-ZD-woY">
+                                                    <rect key="frame" x="20" y="0.0" width="374" height="43.5"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="hzx-6e-WKz" kind="show" id="6bQ-cQ-Fta"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="Uep-kJ-7Br" id="0EP-sR-9yg"/>
+                            <outlet property="delegate" destination="Uep-kJ-7Br" id="5ng-da-U57"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="qiM-rZ-MQ2"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bMb-vJ-Xh0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1194.2028985507247" y="137.94642857142856"/>
+        </scene>
         <!--View Controller-->
+        <scene sceneID="0su-Mo-KSI">
+            <objects>
+                <viewController id="hzx-6e-WKz" customClass="ViewController" customModule="iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="XBi-ar-i17"/>
+                        <viewControllerLayoutGuide type="bottom" id="4Hk-QD-OWd"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="zAJ-pK-14o">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FFY-5Z-CP1">
+                                <rect key="frame" x="20" y="138" width="374" height="724"/>
+                            </scrollView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="veI-md-FZJ" customClass="TabPage" customModule="SwiftTabPager">
+                                <rect key="frame" x="20" y="88" width="374" height="50"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="fqd-PL-mNF"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="veI-md-FZJ" secondAttribute="trailing" id="Nrb-7z-YXN"/>
+                            <constraint firstItem="veI-md-FZJ" firstAttribute="top" secondItem="XBi-ar-i17" secondAttribute="bottom" id="SMy-1D-2YV"/>
+                            <constraint firstItem="FFY-5Z-CP1" firstAttribute="leading" secondItem="zAJ-pK-14o" secondAttribute="leadingMargin" id="Tsb-fH-Dtw"/>
+                            <constraint firstItem="FFY-5Z-CP1" firstAttribute="top" secondItem="veI-md-FZJ" secondAttribute="bottom" id="cKL-1L-mbD"/>
+                            <constraint firstItem="veI-md-FZJ" firstAttribute="leading" secondItem="zAJ-pK-14o" secondAttribute="leadingMargin" id="dxc-B3-8H5"/>
+                            <constraint firstItem="4Hk-QD-OWd" firstAttribute="top" secondItem="FFY-5Z-CP1" secondAttribute="bottom" id="pOm-Tf-DHj"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="FFY-5Z-CP1" secondAttribute="trailing" id="wLI-oc-IzL"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="h17-4R-eNL"/>
+                    <connections>
+                        <outlet property="scrollView" destination="FFY-5Z-CP1" id="4FV-lN-p1F"/>
+                        <outlet property="tabPage" destination="veI-md-FZJ" id="8c6-iS-3rq"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8LZ-85-LHF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2084.057971014493" y="551.11607142857144"/>
+        </scene>
+        <!--Tab Bars View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="TabBarsViewController" customModule="iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -20,14 +129,14 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5nO-DM-4p6" customClass="TabPage" customModule="SwiftTabPager">
-                                <rect key="frame" x="20" y="44" width="374" height="50"/>
+                                <rect key="frame" x="20" y="88" width="374" height="50"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="cB1-Y6-zRJ"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G5l-Xb-C4W" customClass="TabPage" customModule="SwiftTabPager">
-                                <rect key="frame" x="20" y="104" width="374" height="50"/>
+                                <rect key="frame" x="20" y="148" width="374" height="50"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="L7S-t1-r0L"/>
@@ -37,7 +146,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1hI-nK-iuy" customClass="TabPage" customModule="SwiftTabPager">
-                                <rect key="frame" x="20" y="164" width="374" height="50"/>
+                                <rect key="frame" x="20" y="208" width="374" height="50"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="w71-Ku-0Sj"/>
@@ -55,7 +164,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XnM-5V-MH9" customClass="TabPage" customModule="SwiftTabPager">
-                                <rect key="frame" x="20" y="224" width="374" height="50"/>
+                                <rect key="frame" x="20" y="268" width="374" height="50"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="Mv9-6Z-NpM"/>
@@ -67,7 +176,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="28R-DE-d01" customClass="TabPage" customModule="SwiftTabPager">
-                                <rect key="frame" x="20" y="284" width="374" height="50"/>
+                                <rect key="frame" x="20" y="328" width="374" height="50"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="4xB-nX-b5x"/>
@@ -84,7 +193,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hPZ-79-90W" customClass="TabPage" customModule="SwiftTabPager">
-                                <rect key="frame" x="20" y="344" width="374" height="50"/>
+                                <rect key="frame" x="20" y="388" width="374" height="50"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="YnH-ap-V38"/>
@@ -108,7 +217,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="72m-3S-Qu7" customClass="TabPage" customModule="SwiftTabPager">
-                                <rect key="frame" x="20" y="404" width="374" height="50"/>
+                                <rect key="frame" x="20" y="448" width="374" height="50"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="CmO-uX-EIN"/>
@@ -123,7 +232,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4nT-0m-WTg" customClass="TabPage" customModule="SwiftTabPager">
-                                <rect key="frame" x="20" y="464" width="374" height="50"/>
+                                <rect key="frame" x="20" y="508" width="374" height="50"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="hHc-Qa-ywU"/>
@@ -141,7 +250,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ctb-ZZ-06l" customClass="TabPage" customModule="SwiftTabPager">
-                                <rect key="frame" x="20" y="524" width="374" height="50"/>
+                                <rect key="frame" x="20" y="568" width="374" height="50"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="ryb-xl-Mnm"/>
@@ -160,7 +269,7 @@
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qBe-4w-Slq" customClass="TabPage" customModule="SwiftTabPager">
-                                <rect key="frame" x="20" y="584" width="374" height="50"/>
+                                <rect key="frame" x="20" y="628" width="374" height="50"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="eFZ-th-gqY"/>
@@ -231,6 +340,7 @@
                             <constraint firstItem="XnM-5V-MH9" firstAttribute="trailing" secondItem="kh9-bI-dsS" secondAttribute="trailingMargin" id="zzC-O8-1sF"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="Nfu-GV-MTz"/>
                     <connections>
                         <outletCollection property="tabPagesCollection" destination="5nO-DM-4p6" collectionClass="NSMutableArray" id="yPn-vR-qX6"/>
                         <outletCollection property="tabPagesCollection" destination="G5l-Xb-C4W" collectionClass="NSMutableArray" id="c5s-Gt-AT5"/>
@@ -246,7 +356,25 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="504" y="139"/>
+            <point key="canvasLocation" x="2084.057971014493" y="-161.38392857142856"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="swr-Ln-88C">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="hhQ-aM-lHs" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="b3B-FO-SOs">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Uep-kJ-7Br" kind="relationship" relationship="rootViewController" id="9VX-oX-8aW"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="UMh-fa-gHU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="284.05797101449275" y="137.94642857142856"/>
         </scene>
     </scenes>
 </document>
