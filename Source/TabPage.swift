@@ -100,15 +100,14 @@ public class TabPage: UIView {
                 guard let self = self else { return }
                 guard let itemTitles = self.itemTitles, let segmentButtons = self.segmentButtons else { return }
                 let contentOffset = scrollView.contentOffset
-                print(contentOffset)
                 self.selectedLineViewCenterXAnchor?.isActive = false
                 let constant = (scrollView.frame.size.width / CGFloat(itemTitles.count * 2)) * CGFloat(((contentOffset.x / scrollView.frame.width) * 2) + 1)
                 self.selectedLineViewCenterXAnchor = self.selectedLineView.centerXAnchor.constraint(equalTo: scrollView.leftAnchor, constant: constant)
-                self.self.selectedLineViewCenterXAnchor?.isActive = true
+                self.selectedLineViewCenterXAnchor?.isActive = true
                 
                 let index = Int(constant / (scrollView.frame.width / CGFloat(itemTitles.count)))
                 guard index != self.selectedIndex else { return }
-                self.self.selectedIndex = index
+                self.selectedIndex = index
                 
                 if self.indicatorSizeFitTitleWidth {
                     let button = segmentButtons[index]
@@ -117,7 +116,7 @@ public class TabPage: UIView {
                     let size = string.size(withAttributes: [NSAttributedString.Key.font: font])
                     self.selectedLineViewWidthAnchor?.isActive = false
                     self.selectedLineViewWidthAnchor = self.selectedLineView.widthAnchor.constraint(equalToConstant: size.width)
-                    self.self.selectedLineViewWidthAnchor?.isActive = true
+                    self.selectedLineViewWidthAnchor?.isActive = true
                 }
                 self.segmentViewAction?(index)
             }
@@ -202,7 +201,6 @@ public class TabPage: UIView {
         guard let scrollView = scrollView, let controllers = controllers else { return }
         let bgView = UIView()
         scrollView.addSubview(bgView)
-        bgView.backgroundColor = .yellow
         bgView.translatesAutoresizingMaskIntoConstraints = false
         bgView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
         bgView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
@@ -213,8 +211,6 @@ public class TabPage: UIView {
         widthConstraint.isActive = true
         bgView.heightAnchor.constraint(equalTo: scrollView.heightAnchor).isActive = true
         for i in 0 ..< controllers.count {
-            //            scrollView.parentContainerViewController()?.addChild(controllers[i])
-            //            controllers[i].didMove(toParent: scrollView.parentContainerViewController())
             guard let view = controllers[i].view else { return }
             view.translatesAutoresizingMaskIntoConstraints = false
             view.tag = i + 1
@@ -268,6 +264,12 @@ public class TabPage: UIView {
             selectedLineViewWidthAnchor?.isActive = false
             selectedLineViewWidthAnchor = selectedLineView.widthAnchor.constraint(equalToConstant: size.width)
             selectedLineViewWidthAnchor?.isActive = true
+        }
+    }
+    
+    public override func willMove(toWindow newWindow: UIWindow?) {
+        if newWindow == nil {
+            offsetToken?.invalidate()
         }
     }
 
