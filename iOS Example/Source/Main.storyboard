@@ -72,10 +72,10 @@
             </objects>
             <point key="canvasLocation" x="1194.2028985507247" y="137.94642857142856"/>
         </scene>
-        <!--View Controller-->
+        <!--ScrollVC-->
         <scene sceneID="0su-Mo-KSI">
             <objects>
-                <viewController id="hzx-6e-WKz" customClass="ViewController" customModule="iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="hzx-6e-WKz" customClass="ScrollVC" customModule="iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="XBi-ar-i17"/>
                         <viewControllerLayoutGuide type="bottom" id="4Hk-QD-OWd"/>
@@ -116,10 +116,10 @@
             </objects>
             <point key="canvasLocation" x="2084.057971014493" y="551.11607142857144"/>
         </scene>
-        <!--Tab Bars View Controller-->
+        <!--Tab BarsVC-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="TabBarsViewController" customModule="iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="TabBarsVC" customModule="iOS_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>

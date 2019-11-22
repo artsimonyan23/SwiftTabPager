@@ -10,6 +10,7 @@ import UIKit
 
 @IBDesignable
 public class TabPage: UIView {
+    
     @IBInspectable public var selectedTextColor: UIColor = .black
 
     @IBInspectable public var selectedBackgroundColor: UIColor = .white
@@ -53,7 +54,34 @@ public class TabPage: UIView {
     @IBInspectable public var animationDuration: Double = 0.2
 
     public typealias SegmentedViewHandler = ((_ selectedIndex: Int) -> Void)
+    
+    public override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
+        setTitles(titles: ["One", "Two", "Three"]) { _ in }
+    }
 
+    public func setTitles(titles: [String], completion: @escaping SegmentedViewHandler) {
+        itemTitles = titles.filter({ !$0.isEmpty })
+        segmentViewAction = completion
+    }
+    
+    public func setWithControllersOn(scrollView: UIScrollView, data: [(title: String, controller: UIViewController)], completion: @escaping SegmentedViewHandler) {
+        itemTitles = data.compactMap({$0.title})
+        segmentViewAction = completion
+        self.scrollView = scrollView
+        self.controllers = data.compactMap({$0.controller})
+        setupControllers()
+    }
+    
+    public override func willMove(toWindow newWindow: UIWindow?) {
+        if newWindow == nil {
+            offsetToken?.invalidate()
+        }
+    }
+    
+    
+    // private properties
+    
     private var itemTitles: [String]? {
         didSet {
             layer.borderColor = barBorderColor.cgColor
@@ -95,7 +123,6 @@ public class TabPage: UIView {
     private var scrollView: UIScrollView? {
         didSet {
             guard let scrollView = scrollView else { return }
-//            scrollView.delegate = self
             offsetToken = scrollView.observe(\.contentOffset) { [weak self] (scrollView, _) in
                 guard let self = self else { return }
                 guard let itemTitles = self.itemTitles, let segmentButtons = self.segmentButtons else { return }
@@ -125,25 +152,11 @@ public class TabPage: UIView {
             scrollView.showsVerticalScrollIndicator = false
         }
     }
-    
-    public override func prepareForInterfaceBuilder() {
-        super.prepareForInterfaceBuilder()
-        setTitles(titles: ["One", "Two", "Three"]) { _ in }
-    }
 
-    public func setTitles(titles: [String], completion: @escaping SegmentedViewHandler) {
-        itemTitles = titles.filter({ !$0.isEmpty })
-        segmentViewAction = completion
-    }
-    
-    public func setWithControllersOn(scrollView: UIScrollView, data: [(title: String, controller: UIViewController)], completion: @escaping SegmentedViewHandler) {
-        itemTitles = data.compactMap({$0.title})
-        segmentViewAction = completion
-        self.scrollView = scrollView
-        self.controllers = data.compactMap({$0.controller})
-        setupControllers()
-    }
+}
 
+extension TabPage {
+    
     private func createButtons() {
         guard let itemTitles = itemTitles else { return }
         segmentButtons = []
@@ -267,10 +280,4 @@ public class TabPage: UIView {
         }
     }
     
-    public override func willMove(toWindow newWindow: UIWindow?) {
-        if newWindow == nil {
-            offsetToken?.invalidate()
-        }
-    }
-
 }

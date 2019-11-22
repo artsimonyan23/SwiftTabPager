@@ -1,5 +1,5 @@
 //
-//  TabBarsViewController.swift
+//  TabBarsVC.swift
 //  iOS Example
 //
 //  Created by Arthur Simonyan on Oct 10, 2019.
@@ -9,7 +9,7 @@
 import SwiftTabPager
 import UIKit
 
-class TabBarsViewController: UIViewController {
+class TabBarsVC: UIViewController {
 
     @IBOutlet var tabPagesCollection: [TabPage]!
     

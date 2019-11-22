@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		678BCAB2238825FA00995CB2 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678BCAB1238825FA00995CB2 /* Test.swift */; };
 		67C2FB9B234EB1FA006908E3 /* TabPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C2FB99234EB1FA006908E3 /* TabPage.swift */; };
 		67F07BF823681D3A009C23DF /* TabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F07BF723681D3A009C23DF /* TabButton.swift */; };
 		D90DA8DE22542C80005B35DE /* SwiftTabPager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90DA8D422542C80005B35DE /* SwiftTabPager.framework */; };
@@ -24,7 +25,7 @@
 
 /* Begin PBXFileReference section */
 		6715BD12235119BC00A73E31 /* TabBarScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarScrollView.swift; sourceTree = "<group>"; };
-		6715BD1523514FDF00A73E31 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Test.swift; path = Source/Test.swift; sourceTree = SOURCE_ROOT; };
+		678BCAB1238825FA00995CB2 /* Test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		67C2FB99234EB1FA006908E3 /* TabPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabPage.swift; sourceTree = "<group>"; };
 		67C2FB9A234EB1FA006908E3 /* TabPageCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabPageCollectionView.swift; sourceTree = "<group>"; };
 		67F07BF723681D3A009C23DF /* TabButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabButton.swift; sourceTree = "<group>"; };
@@ -57,7 +58,7 @@
 			children = (
 				6715BD12235119BC00A73E31 /* TabBarScrollView.swift */,
 				67C2FB9A234EB1FA006908E3 /* TabPageCollectionView.swift */,
-				6715BD1523514FDF00A73E31 /* Test.swift */,
+				678BCAB1238825FA00995CB2 /* Test.swift */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -208,6 +209,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				67C2FB9B234EB1FA006908E3 /* TabPage.swift in Sources */,
+				678BCAB2238825FA00995CB2 /* Test.swift in Sources */,
 				67F07BF823681D3A009C23DF /* TabButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

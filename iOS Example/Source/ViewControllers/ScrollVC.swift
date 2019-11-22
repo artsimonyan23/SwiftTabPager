@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ScrollVC.swift
 //  iOS Example
 //
 //  Created by ArtS on 10/29/19.
@@ -9,7 +9,7 @@
 import UIKit
 import SwiftTabPager
 
-class ViewController: UIViewController {
+class ScrollVC: UIViewController {
 
     @IBOutlet weak var tabPage: TabPage!
     @IBOutlet weak var scrollView: UIScrollView!
