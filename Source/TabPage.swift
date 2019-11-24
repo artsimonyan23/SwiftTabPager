@@ -11,45 +11,90 @@ import UIKit
 @IBDesignable
 public class TabPage: UIView {
     
-    @IBInspectable public var selectedTextColor: UIColor = .black
+    @IBInspectable public var selectedTextColor: UIColor = .black { didSet { createButtons() } }
 
-    @IBInspectable public var selectedBackgroundColor: UIColor = .white
+    @IBInspectable public var selectedBackgroundColor: UIColor = .white { didSet { createButtons() } }
 
-    @IBInspectable public var unselectedTextColor: UIColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2)
+    @IBInspectable public var unselectedTextColor: UIColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2) { didSet { createButtons() } }
 
-    @IBInspectable public var unselectedBackgroundColor: UIColor = .white
+    @IBInspectable public var unselectedBackgroundColor: UIColor = .white { didSet { createButtons() } }
+    
+    @IBInspectable public var textFont: UIFont? { didSet { createButtons() } }
+    
+    @IBInspectable public var indicatorColor: UIColor = UIColor.black {
+        didSet {
+            createSelectedLine()
+            selectedLineView.layoutIfNeeded()
+            scrollSelectedLineToIndex(index: 0)
+        }
+    }
 
-    @IBInspectable public var textFont: UIFont?
+    @IBInspectable public var indicatorIsAtBottom: Bool = true {
+        didSet {
+            createSelectedLine()
+            selectedLineView.layoutIfNeeded()
+            scrollSelectedLineToIndex(index: 0)
+        }
+    }
 
-    @IBInspectable public var indicatorColor: UIColor = UIColor.black
+    @IBInspectable public var indicatorSizeFitTitleWidth: Bool = false {
+        didSet {
+            createSelectedLine()
+            selectedLineView.layoutIfNeeded()
+            scrollSelectedLineToIndex(index: 0)
+        }
+    }
 
-    @IBInspectable public var indicatorIsAtBottom: Bool = true
+    @IBInspectable public var indicatorHeight: CGFloat = 1.0 {
+        didSet {
+            createSelectedLine()
+            selectedLineView.layoutIfNeeded()
+            scrollSelectedLineToIndex(index: 0)
+        }
+    }
 
-    @IBInspectable public var indicatorSizeFitTitleWidth: Bool = false
+    @IBInspectable public var indicatorWidth: CGFloat = -1 {
+        didSet {
+            createSelectedLine()
+            selectedLineView.layoutIfNeeded()
+            scrollSelectedLineToIndex(index: 0)
+        }
+    }
 
-    @IBInspectable public var indicatorHeight: CGFloat = 1.0
+    @IBInspectable public var indicatorOffset: CGFloat = 0 {
+        didSet {
+            createSelectedLine()
+            selectedLineView.layoutIfNeeded()
+            scrollSelectedLineToIndex(index: 0)
+        }
+    }
 
-    @IBInspectable public var indicatorWidth: CGFloat = -1
+    @IBInspectable public var horizontalSpacing: CGFloat = 0 { didSet { createButtons() } }
 
-    @IBInspectable public var indicatorOffset: CGFloat = 0
+    @IBInspectable public var horizontalSpacingFromBorders: Bool = false { didSet { createButtons() } }
 
-    @IBInspectable public var horizontalSpacing: CGFloat = 0
+    @IBInspectable public var verticalSpacing: CGFloat = 0 { didSet { createButtons() } }
 
-    @IBInspectable public var horizontalSpacingFromBorders: Bool = false
+    @IBInspectable public var barBorderWidth: CGFloat {
+        set { layer.borderWidth = newValue  }
+        get { return layer.borderWidth }
+    }
 
-    @IBInspectable public var verticalSpacing: CGFloat = 0
+    @IBInspectable public var barBorderCornerRadius: CGFloat {
+        set { layer.cornerRadius = newValue  }
+        get { return layer.cornerRadius }
+    }
 
-    @IBInspectable public var barBorderWidth: CGFloat = 0
+    @IBInspectable public var barBorderColor: UIColor {
+        set { layer.borderColor = newValue.cgColor  }
+        get { return UIColor(cgColor: layer.borderColor!) }
+    }
 
-    @IBInspectable public var barBorderCornerRadius: CGFloat = 0
+    @IBInspectable public var itemBorderWidth: CGFloat = 0 { didSet { createButtons() } }
 
-    @IBInspectable public var barBorderColor: UIColor = .black
+    @IBInspectable public var itemBorderCornerRadius: CGFloat = 0 { didSet { createButtons() } }
 
-    @IBInspectable public var itemBorderWidth: CGFloat = 0
-
-    @IBInspectable public var itemBorderCornerRadius: CGFloat = 0
-
-    @IBInspectable public var itemBorderColor: UIColor = .black
+    @IBInspectable public var itemBorderColor: UIColor = .black { didSet { createButtons() } }
 
     @IBInspectable public var animationDuration: Double = 0.2
 
@@ -79,14 +124,13 @@ public class TabPage: UIView {
         }
     }
     
+    public var segmentButtons: [UIButton]?
+
     
     // private properties
     
     private var itemTitles: [String]? {
         didSet {
-            layer.borderColor = barBorderColor.cgColor
-            layer.borderWidth = barBorderWidth
-            layer.cornerRadius = barBorderCornerRadius
             createButtons()
             createSelectedLine()
             //                layoutIfNeeded()
@@ -109,8 +153,6 @@ public class TabPage: UIView {
             }
         }
     }
-
-    private var segmentButtons: [UIButton]?
 
     private var segmentViewAction: SegmentedViewHandler?
     private let selectedLineView = UIView()
