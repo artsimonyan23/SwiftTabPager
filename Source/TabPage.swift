@@ -24,6 +24,7 @@ public class TabPage: UIView {
     @IBInspectable public var indicatorColor: UIColor = UIColor.black {
         didSet {
             createSelectedLine()
+            guard let selectedLineView = selectedLineView else { return }
             selectedLineView.layoutIfNeeded()
             scrollSelectedLineToIndex(index: 0)
         }
@@ -32,6 +33,7 @@ public class TabPage: UIView {
     @IBInspectable public var indicatorIsAtBottom: Bool = true {
         didSet {
             createSelectedLine()
+            guard let selectedLineView = selectedLineView else { return }
             selectedLineView.layoutIfNeeded()
             scrollSelectedLineToIndex(index: 0)
         }
@@ -40,6 +42,7 @@ public class TabPage: UIView {
     @IBInspectable public var indicatorSizeFitTitleWidth: Bool = false {
         didSet {
             createSelectedLine()
+            guard let selectedLineView = selectedLineView else { return }
             selectedLineView.layoutIfNeeded()
             scrollSelectedLineToIndex(index: 0)
         }
@@ -48,6 +51,7 @@ public class TabPage: UIView {
     @IBInspectable public var indicatorHeight: CGFloat = 1.0 {
         didSet {
             createSelectedLine()
+            guard let selectedLineView = selectedLineView else { return }
             selectedLineView.layoutIfNeeded()
             scrollSelectedLineToIndex(index: 0)
         }
@@ -56,6 +60,7 @@ public class TabPage: UIView {
     @IBInspectable public var indicatorWidth: CGFloat = -1 {
         didSet {
             createSelectedLine()
+            guard let selectedLineView = selectedLineView else { return }
             selectedLineView.layoutIfNeeded()
             scrollSelectedLineToIndex(index: 0)
         }
@@ -64,6 +69,7 @@ public class TabPage: UIView {
     @IBInspectable public var indicatorOffset: CGFloat = 0 {
         didSet {
             createSelectedLine()
+            guard let selectedLineView = selectedLineView else { return }
             selectedLineView.layoutIfNeeded()
             scrollSelectedLineToIndex(index: 0)
         }
@@ -157,6 +163,7 @@ public class TabPage: UIView {
             createButtons()
             createSelectedLine()
             //                layoutIfNeeded()
+            guard let selectedLineView = selectedLineView else { return }
             selectedLineView.layoutIfNeeded()
             scrollSelectedLineToIndex(index: 0)
         }
@@ -181,7 +188,7 @@ public class TabPage: UIView {
     }
 
     private var segmentViewAction: SegmentedViewHandler?
-    private let selectedLineView = UIView()
+    private var selectedLineView: UIView?
     private var selectedLineViewCenterXAnchor: NSLayoutConstraint?
     private var selectedLineViewWidthAnchor: NSLayoutConstraint?
 
@@ -255,9 +262,11 @@ extension TabPage {
     }
 
     private func createSelectedLine() {
-        selectedLineView.removeFromSuperview()
-
+        selectedLineView?.removeFromSuperview()
+        selectedLineView = nil
         guard let itemTitles = itemTitles, itemTitles.count > 0, indicatorColor != .clear, let button = segmentButtons?.first else { return }
+        selectedLineView = UIView()
+        let selectedLineView = self.selectedLineView!
         addSubview(selectedLineView)
         selectedLineView.backgroundColor = indicatorColor
         selectedLineView.translatesAutoresizingMaskIntoConstraints = false
@@ -282,11 +291,12 @@ extension TabPage {
             guard let self = self else { return }
             guard let itemTitles = self.itemTitles, let segmentButtons = self.segmentButtons else { return }
             let contentOffset = scrollView.contentOffset
-            self.selectedLineViewCenterXAnchor?.isActive = false
             let constant = (scrollView.frame.size.width / CGFloat(itemTitles.count * 2)) * CGFloat(((contentOffset.x / scrollView.frame.width) * 2) + 1)
-            self.selectedLineViewCenterXAnchor = self.selectedLineView.centerXAnchor.constraint(equalTo: scrollView.leftAnchor, constant: constant)
-            self.selectedLineViewCenterXAnchor?.isActive = true
-            
+            if let selectedLineView = self.selectedLineView {
+                self.selectedLineViewCenterXAnchor?.isActive = false
+                self.selectedLineViewCenterXAnchor = selectedLineView.centerXAnchor.constraint(equalTo: scrollView.leftAnchor, constant: constant)
+                self.selectedLineViewCenterXAnchor?.isActive = true
+            }
             let index = Int(constant / (scrollView.frame.width / CGFloat(itemTitles.count)))
             guard index != self.selectedIndex else { return }
             if scrollView.isDecelerating || scrollView.isDragging {
@@ -297,9 +307,11 @@ extension TabPage {
                 guard let string = button.titleLabel?.text else { fatalError("missing title on button, title is required for width calculation") }
                 guard let font = button.titleLabel?.font else { fatalError("missing dont on button, title is required for width calculation") }
                 let size = string.size(withAttributes: [NSAttributedString.Key.font: font])
-                self.selectedLineViewWidthAnchor?.isActive = false
-                self.selectedLineViewWidthAnchor = self.selectedLineView.widthAnchor.constraint(equalToConstant: size.width)
-                self.selectedLineViewWidthAnchor?.isActive = true
+                if let selectedLineView = self.selectedLineView {
+                    self.selectedLineViewWidthAnchor?.isActive = false
+                    self.selectedLineViewWidthAnchor = selectedLineView.widthAnchor.constraint(equalToConstant: size.width)
+                    self.selectedLineViewWidthAnchor?.isActive = true
+                }
             }
         }
         scrollView.isPagingEnabled = true
@@ -343,6 +355,7 @@ extension TabPage {
     }
 
     private func scrollSelectedLineToIndex(index: Int) {
+        guard let selectedLineView = selectedLineView else { return }
         guard let segmentButtons = segmentButtons else { return }
 
         let button = segmentButtons[index]
