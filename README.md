@@ -58,7 +58,7 @@ $ brew install carthage
 To integrate SwiftTabPager into your Xcode project using Carthage, specify it in your `Cartfile`:
 
 ```ogdl
-github "artsimonyan23/SwiftTabPager" ~> 0.1
+github "artsimonyan23/SwiftTabPager"
 ```
 
 Run `carthage update` to build the framework and drag the built `SwiftTabPager`.framework into your Xcode project.
