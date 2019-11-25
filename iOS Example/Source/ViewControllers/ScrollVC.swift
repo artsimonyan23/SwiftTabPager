@@ -14,29 +14,14 @@ class ScrollVC: UIViewController {
     @IBOutlet weak var tabPage: TabPage!
     @IBOutlet weak var scrollView: UIScrollView!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        let vc1 = UIViewController()
-        vc1.view.backgroundColor = .red
-        let vc2 = UIViewController()
-        vc2.view.backgroundColor = .blue
-        let vc3 = UIViewController()
-        vc3.view.backgroundColor = .yellow
-        
-        tabPage.setWithControllersOn(scrollView: scrollView, data: [(title: "aaa", controller: vc1),
-                                                                    (title: "bbb", controller: vc2),
-                                                                    (title: "ccc", controller: vc3)]) { (selectedIndex) in
-            print(selectedIndex)
-        }
-    }
-
-}
-
-class Aaa: UIViewController {
+    var setupTabPage: ((_ tabPage: TabPage, _ scrollView: UIScrollView)->())?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupTabPage?(tabPage, scrollView)
+        
     }
 
 }
+

@@ -70,7 +70,7 @@ Run `carthage update` to build the framework and drag the built `SwiftTabPager`.
   width=800 height=500>
   
   Create TabPage view from Stroryboard or by code and set it. Call setTitles function and set Titles by array and closure which gave you selected index. 
-  See example in project.
+  See example in the project.
   <img src="https://github.com/artsimonyan23/SwiftTabPager/blob/master/Screenshots/examples.png"
   width=200 height=432>
 

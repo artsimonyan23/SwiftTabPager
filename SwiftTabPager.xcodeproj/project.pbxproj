@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		678BCAB2238825FA00995CB2 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678BCAB1238825FA00995CB2 /* Test.swift */; };
+		67398564238BD096008F9A5E /* TabPageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67398563238BD096008F9A5E /* TabPageDelegate.swift */; };
 		67C2FB9B234EB1FA006908E3 /* TabPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C2FB99234EB1FA006908E3 /* TabPage.swift */; };
+		67F014F8238BE273009F9F78 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F014F7238BE273009F9F78 /* UIView.swift */; };
 		67F07BF823681D3A009C23DF /* TabButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F07BF723681D3A009C23DF /* TabButton.swift */; };
 		D90DA8DE22542C80005B35DE /* SwiftTabPager.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D90DA8D422542C80005B35DE /* SwiftTabPager.framework */; };
 /* End PBXBuildFile section */
@@ -24,10 +25,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		6715BD12235119BC00A73E31 /* TabBarScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarScrollView.swift; sourceTree = "<group>"; };
-		678BCAB1238825FA00995CB2 /* Test.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
+		67398563238BD096008F9A5E /* TabPageDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabPageDelegate.swift; sourceTree = "<group>"; };
 		67C2FB99234EB1FA006908E3 /* TabPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabPage.swift; sourceTree = "<group>"; };
-		67C2FB9A234EB1FA006908E3 /* TabPageCollectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabPageCollectionView.swift; sourceTree = "<group>"; };
+		67F014F7238BE273009F9F78 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		67F07BF723681D3A009C23DF /* TabButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabButton.swift; sourceTree = "<group>"; };
 		D90DA8D422542C80005B35DE /* SwiftTabPager.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftTabPager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D90DA8D822542C80005B35DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -53,20 +53,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6715BD1423514F2900A73E31 /* Test */ = {
+		67F014F6238BE261009F9F78 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				6715BD12235119BC00A73E31 /* TabBarScrollView.swift */,
-				67C2FB9A234EB1FA006908E3 /* TabPageCollectionView.swift */,
-				678BCAB1238825FA00995CB2 /* Test.swift */,
+				67F014F7238BE273009F9F78 /* UIView.swift */,
 			);
-			path = Test;
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		67F07BF923681D93009C23DF /* Resources */ = {
 			isa = PBXGroup;
 			children = (
 				67F07BF723681D3A009C23DF /* TabButton.swift */,
+				67398563238BD096008F9A5E /* TabPageDelegate.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -74,7 +73,6 @@
 		D90DA8CA22542C80005B35DE = {
 			isa = PBXGroup;
 			children = (
-				6715BD1423514F2900A73E31 /* Test */,
 				D90DA8D622542C80005B35DE /* Source */,
 				D90DA8D522542C80005B35DE /* Products */,
 			);
@@ -94,6 +92,7 @@
 			children = (
 				67C2FB99234EB1FA006908E3 /* TabPage.swift */,
 				67F07BF923681D93009C23DF /* Resources */,
+				67F014F6238BE261009F9F78 /* Extensions */,
 				D90DA8D822542C80005B35DE /* Info.plist */,
 			);
 			path = Source;
@@ -208,8 +207,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				67F014F8238BE273009F9F78 /* UIView.swift in Sources */,
 				67C2FB9B234EB1FA006908E3 /* TabPage.swift in Sources */,
-				678BCAB2238825FA00995CB2 /* Test.swift in Sources */,
+				67398564238BD096008F9A5E /* TabPageDelegate.swift in Sources */,
 				67F07BF823681D3A009C23DF /* TabButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

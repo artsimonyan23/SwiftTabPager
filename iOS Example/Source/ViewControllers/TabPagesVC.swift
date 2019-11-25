@@ -1,5 +1,5 @@
 //
-//  TabBarsVC.swift
+//  TabPagesVC.swift
 //  iOS Example
 //
 //  Created by Arthur Simonyan on Oct 10, 2019.
@@ -9,7 +9,7 @@
 import SwiftTabPager
 import UIKit
 
-class TabBarsVC: UIViewController {
+class TabPagesVC: UIViewController {
 
     @IBOutlet var tabPagesCollection: [TabPage]!
     
@@ -17,7 +17,7 @@ class TabBarsVC: UIViewController {
         super.viewDidLoad()
         
         tabPagesCollection.forEach { (tabPage) in
-            tabPage.setTitles(titles: ["Title 1", "2", "Three", "4"]) { selectedIndex in
+            tabPage.setWithTitles(titles: ["Title 1", "2", "Three", "4"]) { selectedIndex in
                 print(selectedIndex)
             }
         }

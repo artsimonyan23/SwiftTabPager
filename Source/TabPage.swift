@@ -100,22 +100,45 @@ public class TabPage: UIView {
 
     public typealias SegmentedViewHandler = ((_ selectedIndex: Int) -> Void)
     
+    public var segmentButtons: [UIButton]?
+
     public override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
-        setTitles(titles: ["One", "Two", "Three"]) { _ in }
+        setWithTitles(titles: ["One", "Two", "Three"]) { _ in }
     }
 
-    public func setTitles(titles: [String], completion: @escaping SegmentedViewHandler) {
+    public func setWithTitles(titles: [String], completion: @escaping SegmentedViewHandler) {
         itemTitles = titles.filter({ !$0.isEmpty })
         segmentViewAction = completion
     }
     
-    public func setWithControllersOn(scrollView: UIScrollView, data: [(title: String, controller: UIViewController)], completion: @escaping SegmentedViewHandler) {
+    public func setWithControllers(data: [(title: String, controller: UIViewController)], on scrollView: UIScrollView, completion: @escaping SegmentedViewHandler) {
         itemTitles = data.compactMap({$0.title})
         segmentViewAction = completion
         self.scrollView = scrollView
-        self.controllers = data.compactMap({$0.controller})
-        setupControllers()
+        self.childControllers = data.compactMap({$0.controller})
+        setupPages(views: data.compactMap({$0.controller.view}), on: scrollView)
+    }
+    
+    public func setWithControllers(data: [(title: String, controller: UIViewController)], on scrollView: UIScrollView, delegate: TabPageDelegate) {
+        self.tabPageDelegate = delegate
+        setWithControllers(data: data, on: scrollView) { (index) in
+            self.tabPageDelegate?.tabPage(didSelectAt: index)
+        }
+    }
+    
+    public func setWithViews(data: [(title: String, view: UIView)], on scrollView: UIScrollView, completion: @escaping SegmentedViewHandler) {
+        itemTitles = data.compactMap({$0.title})
+        segmentViewAction = completion
+        self.scrollView = scrollView
+        setupPages(views: data.compactMap({$0.view}), on: scrollView)
+    }
+    
+    public func setWithViews(data: [(title: String, view: UIView)], on scrollView: UIScrollView, delegate: TabPageDelegate) {
+        self.tabPageDelegate = delegate
+        setWithViews(data: data, on: scrollView) { (index) in
+            self.tabPageDelegate?.tabPage(didSelectAt: index)
+        }
     }
     
     public override func willMove(toWindow newWindow: UIWindow?) {
@@ -124,10 +147,10 @@ public class TabPage: UIView {
         }
     }
     
-    public var segmentButtons: [UIButton]?
-
     
     // private properties
+    
+    private weak var tabPageDelegate: TabPageDelegate?
     
     private var itemTitles: [String]? {
         didSet {
@@ -147,6 +170,9 @@ public class TabPage: UIView {
             }
         }
         didSet {
+            if selectedIndex != oldValue {
+                self.segmentViewAction?(selectedIndex)
+            }
             guard segmentButtons?.count ?? 0 > oldValue, oldValue >= 0 else { return }
             if let previewButton = segmentButtons?[oldValue] {
                 previewButton.isEnabled = true
@@ -158,40 +184,24 @@ public class TabPage: UIView {
     private let selectedLineView = UIView()
     private var selectedLineViewCenterXAnchor: NSLayoutConstraint?
     private var selectedLineViewWidthAnchor: NSLayoutConstraint?
-    private var controllers: [UIViewController]?
 
     private var offsetToken: NSKeyValueObservation?
 
+    private var childControllers: [UIViewController]? {
+        didSet {
+            oldValue?.forEach({ (controller) in
+                controller.removeFromParent()
+            })
+            childControllers?.forEach { controller in
+                viewContainingController()?.addChild(controller)
+            }
+        }
+    }
+
     private var scrollView: UIScrollView? {
         didSet {
-            guard let scrollView = scrollView else { return }
-            offsetToken = scrollView.observe(\.contentOffset) { [weak self] (scrollView, _) in
-                guard let self = self else { return }
-                guard let itemTitles = self.itemTitles, let segmentButtons = self.segmentButtons else { return }
-                let contentOffset = scrollView.contentOffset
-                self.selectedLineViewCenterXAnchor?.isActive = false
-                let constant = (scrollView.frame.size.width / CGFloat(itemTitles.count * 2)) * CGFloat(((contentOffset.x / scrollView.frame.width) * 2) + 1)
-                self.selectedLineViewCenterXAnchor = self.selectedLineView.centerXAnchor.constraint(equalTo: scrollView.leftAnchor, constant: constant)
-                self.selectedLineViewCenterXAnchor?.isActive = true
-                
-                let index = Int(constant / (scrollView.frame.width / CGFloat(itemTitles.count)))
-                guard index != self.selectedIndex else { return }
-                self.selectedIndex = index
-                
-                if self.indicatorSizeFitTitleWidth {
-                    let button = segmentButtons[index]
-                    guard let string = button.titleLabel?.text else { fatalError("missing title on button, title is required for width calculation") }
-                    guard let font = button.titleLabel?.font else { fatalError("missing dont on button, title is required for width calculation") }
-                    let size = string.size(withAttributes: [NSAttributedString.Key.font: font])
-                    self.selectedLineViewWidthAnchor?.isActive = false
-                    self.selectedLineViewWidthAnchor = self.selectedLineView.widthAnchor.constraint(equalToConstant: size.width)
-                    self.selectedLineViewWidthAnchor?.isActive = true
-                }
-                self.segmentViewAction?(index)
-            }
-            scrollView.isPagingEnabled = true
-            scrollView.showsHorizontalScrollIndicator = false
-            scrollView.showsVerticalScrollIndicator = false
+            offsetToken?.invalidate()
+            setupScrollView()
         }
     }
 
@@ -229,11 +239,25 @@ extension TabPage {
             }
         }
     }
+    
+    @objc private func appNavigationButtonAction(_ sender: UIButton) {
+        selectedIndex = sender.tag - 1
+        if let scrollView = scrollView {
+            var frame = scrollView.bounds
+            frame.origin.x = frame.size.width * CGFloat(selectedIndex)
+            scrollView.scrollRectToVisible(frame, animated: true)
+        } else {
+            UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseOut, animations: {
+                self.scrollSelectedLineToIndex(index: self.selectedIndex)
+                self.layoutSubviews()
+            }, completion: nil)
+        }
+    }
 
     private func createSelectedLine() {
         selectedLineView.removeFromSuperview()
 
-        guard let itemTitles = itemTitles, itemTitles.count > 0, let button = segmentButtons?.first else { return }
+        guard let itemTitles = itemTitles, itemTitles.count > 0, indicatorColor != .clear, let button = segmentButtons?.first else { return }
         addSubview(selectedLineView)
         selectedLineView.backgroundColor = indicatorColor
         selectedLineView.translatesAutoresizingMaskIntoConstraints = false
@@ -252,9 +276,41 @@ extension TabPage {
         }
     }
     
-    private func setupControllers() {
-        guard let scrollView = scrollView, let controllers = controllers else { return }
+    private func setupScrollView() {
+        guard let scrollView = scrollView else { return }
+        offsetToken = scrollView.observe(\.contentOffset) { [weak self] (scrollView, _) in
+            guard let self = self else { return }
+            guard let itemTitles = self.itemTitles, let segmentButtons = self.segmentButtons else { return }
+            let contentOffset = scrollView.contentOffset
+            self.selectedLineViewCenterXAnchor?.isActive = false
+            let constant = (scrollView.frame.size.width / CGFloat(itemTitles.count * 2)) * CGFloat(((contentOffset.x / scrollView.frame.width) * 2) + 1)
+            self.selectedLineViewCenterXAnchor = self.selectedLineView.centerXAnchor.constraint(equalTo: scrollView.leftAnchor, constant: constant)
+            self.selectedLineViewCenterXAnchor?.isActive = true
+            
+            let index = Int(constant / (scrollView.frame.width / CGFloat(itemTitles.count)))
+            guard index != self.selectedIndex else { return }
+            if scrollView.isDecelerating || scrollView.isDragging {
+                self.selectedIndex = index
+            }
+            if self.indicatorSizeFitTitleWidth {
+                let button = segmentButtons[index]
+                guard let string = button.titleLabel?.text else { fatalError("missing title on button, title is required for width calculation") }
+                guard let font = button.titleLabel?.font else { fatalError("missing dont on button, title is required for width calculation") }
+                let size = string.size(withAttributes: [NSAttributedString.Key.font: font])
+                self.selectedLineViewWidthAnchor?.isActive = false
+                self.selectedLineViewWidthAnchor = self.selectedLineView.widthAnchor.constraint(equalToConstant: size.width)
+                self.selectedLineViewWidthAnchor?.isActive = true
+            }
+        }
+        scrollView.isPagingEnabled = true
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.showsVerticalScrollIndicator = false
+    }
+    
+    private func setupPages(views: [UIView], on scrollView: UIScrollView) {
+        scrollView.viewWithTag(123)?.removeFromSuperview()
         let bgView = UIView()
+        bgView.tag = 123
         scrollView.addSubview(bgView)
         bgView.translatesAutoresizingMaskIntoConstraints = false
         bgView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
@@ -265,8 +321,8 @@ extension TabPage {
         widthConstraint.priority = UILayoutPriority(rawValue: 750)
         widthConstraint.isActive = true
         bgView.heightAnchor.constraint(equalTo: scrollView.heightAnchor).isActive = true
-        for i in 0 ..< controllers.count {
-            guard let view = controllers[i].view else { return }
+        for i in 0 ..< views.count {
+            let view = views[i]
             view.translatesAutoresizingMaskIntoConstraints = false
             view.tag = i + 1
             bgView.addSubview(view)
@@ -280,26 +336,10 @@ extension TabPage {
                 view.leftAnchor.constraint(equalTo: preview.rightAnchor).isActive = true
                 view.widthAnchor.constraint(equalTo: preview.widthAnchor).isActive = true
             }
-            if i == controllers.count - 1 {
+            if i == views.count - 1 {
                 view.rightAnchor.constraint(equalTo: bgView.rightAnchor).isActive = true
             }
         }
-    }
-
-    @objc private func appNavigationButtonAction(_ sender: UIButton) {
-        selectedIndex = sender.tag - 1
-        if let scrollView = scrollView {
-            var frame = scrollView.bounds
-            frame.origin.x = frame.size.width * CGFloat(selectedIndex)
-            scrollView.scrollRectToVisible(frame, animated: true)
-        } else {
-            UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseOut, animations: {
-                self.scrollSelectedLineToIndex(index: self.selectedIndex)
-                self.layoutSubviews()
-            }, completion: nil)
-            segmentViewAction?(selectedIndex)
-        }
-
     }
 
     private func scrollSelectedLineToIndex(index: Int) {
