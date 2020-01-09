@@ -15,11 +15,25 @@ public class TabPage: UIView {
 
     @IBInspectable public var selectedBackgroundColor: UIColor = .white { didSet { createButtons() } }
 
+    @IBInspectable public var selectedBorderWidth: CGFloat = 0 { didSet { createButtons() } }
+
+    @IBInspectable public var selectedBorderCornerRadius: CGFloat = 0 { didSet { createButtons() } }
+
+    @IBInspectable public var selectedBorderColor: UIColor = .black { didSet { createButtons() } }
+    
+    @IBInspectable public var selectedTextFont: UIFont? { didSet { createButtons() } }
+
     @IBInspectable public var unselectedTextColor: UIColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2) { didSet { createButtons() } }
 
     @IBInspectable public var unselectedBackgroundColor: UIColor = .white { didSet { createButtons() } }
     
-    @IBInspectable public var textFont: UIFont? { didSet { createButtons() } }
+    @IBInspectable public var unselectedBorderWidth: CGFloat = 0 { didSet { createButtons() } }
+
+    @IBInspectable public var unselectedBorderCornerRadius: CGFloat = 0 { didSet { createButtons() } }
+
+    @IBInspectable public var unselectedBorderColor: UIColor = .black { didSet { createButtons() } }
+    
+    @IBInspectable public var unselectedTextFont: UIFont? { didSet { createButtons() } }
     
     @IBInspectable public var indicatorColor: UIColor = UIColor.black {
         didSet {
@@ -96,16 +110,11 @@ public class TabPage: UIView {
         get { return UIColor(cgColor: layer.borderColor!) }
     }
 
-    @IBInspectable public var itemBorderWidth: CGFloat = 0 { didSet { createButtons() } }
-
-    @IBInspectable public var itemBorderCornerRadius: CGFloat = 0 { didSet { createButtons() } }
-
-    @IBInspectable public var itemBorderColor: UIColor = .black { didSet { createButtons() } }
-
     @IBInspectable public var animationDuration: Double = 0.2
 
     public typealias SegmentedViewHandler = ((_ selectedIndex: Int) -> Void)
-    
+    public typealias SegmentedViewHandlerCell = ((_ selectedIndexPath: IndexPath) -> UICollectionViewCell)
+
     public var segmentButtons: [UIButton]?
 
     public override func prepareForInterfaceBuilder() {
@@ -147,6 +156,20 @@ public class TabPage: UIView {
         }
     }
     
+    public func setWithCollectionViewCells(data: [(title: String, cell: UICollectionViewCell)], on collectionView: UICollectionView, completion: @escaping SegmentedViewHandler) {
+        itemTitles = data.map({$0.title})
+        self.collectionView = collectionView
+        collectionCells = data.map({$0.cell})
+        segmentViewAction = completion
+    }
+    
+    public func setWithCollectionViewCells(data: [(title: String, cell: UICollectionViewCell)], on collectionView: UICollectionView, delegate: TabPageDelegate) {
+        self.tabPageDelegate = delegate
+        setWithCollectionViewCells(data: data, on: collectionView) { (index) in
+            self.tabPageDelegate?.tabPage(didSelectAt: index)
+        }
+    }
+    
     public override func willMove(toWindow newWindow: UIWindow?) {
         if newWindow == nil {
             offsetToken?.invalidate()
@@ -168,6 +191,8 @@ public class TabPage: UIView {
             scrollSelectedLineToIndex(index: 0)
         }
     }
+    
+    private var collectionCells: [UICollectionViewCell]?
 
     private var selectedIndex = 0 {
         willSet {
@@ -211,6 +236,13 @@ public class TabPage: UIView {
             setupScrollView()
         }
     }
+    
+    private var collectionView: UICollectionView? {
+        didSet {
+            offsetToken?.invalidate()
+            setupCollectionView()
+        }
+    }
 
 }
 
@@ -220,14 +252,22 @@ extension TabPage {
         guard let itemTitles = itemTitles else { return }
         segmentButtons = []
         for i in 0 ..< itemTitles.count {
-            let button = TabButton(selectedColor: (title: selectedTextColor, background: selectedBackgroundColor), unselectedColor: (title: unselectedTextColor, background: unselectedBackgroundColor))
+            let button = TabButton()
             addSubview(button)
             segmentButtons?.append(button)
-            button.titleLabel?.font = textFont
+            button.selectedTextColor = selectedTextColor
+            button.selectedBackgroundColor = selectedBackgroundColor
+            button.selectedBorderWidth = selectedBorderWidth
+            button.selectedBorderCornerRadius = selectedBorderCornerRadius
+            button.selectedBorderColor = selectedBorderColor
+            button.selectedTextFont = selectedTextFont
+            button.unselectedTextColor = unselectedTextColor
+            button.unselectedBackgroundColor = unselectedBackgroundColor
+            button.unselectedBorderWidth = unselectedBorderWidth
+            button.unselectedBorderCornerRadius = unselectedBorderCornerRadius
+            button.unselectedBorderColor = unselectedBorderColor
+            button.unselectedTextFont = unselectedTextFont
             button.tag = i + 1
-            button.layer.borderColor = itemBorderColor.cgColor
-            button.layer.borderWidth = itemBorderWidth
-            button.layer.cornerRadius = itemBorderCornerRadius
             button.addTarget(self, action: #selector(appNavigationButtonAction(_:)), for: .touchUpInside)
             button.setTitle(itemTitles[i], for: .normal)
             button.translatesAutoresizingMaskIntoConstraints = false
@@ -319,6 +359,45 @@ extension TabPage {
         scrollView.showsVerticalScrollIndicator = false
     }
     
+    private func setupCollectionView() {
+        guard let collectionView = collectionView else { return }
+        offsetToken = collectionView.observe(\.contentOffset) { [weak self] (scrollView, _) in
+            guard let self = self else { return }
+            guard let itemTitles = self.itemTitles, let segmentButtons = self.segmentButtons else { return }
+            let contentOffset = scrollView.contentOffset
+            let constant = (scrollView.frame.size.width / CGFloat(itemTitles.count * 2)) * CGFloat(((contentOffset.x / scrollView.frame.width) * 2) + 1)
+            if let selectedLineView = self.selectedLineView {
+                self.selectedLineViewCenterXAnchor?.isActive = false
+                self.selectedLineViewCenterXAnchor = selectedLineView.centerXAnchor.constraint(equalTo: scrollView.leftAnchor, constant: constant)
+                self.selectedLineViewCenterXAnchor?.isActive = true
+            }
+            let index = Int(constant / (scrollView.frame.width / CGFloat(itemTitles.count)))
+            guard index != self.selectedIndex else { return }
+            if scrollView.isDecelerating || scrollView.isDragging {
+                self.selectedIndex = index
+            }
+            if self.indicatorSizeFitTitleWidth {
+                let button = segmentButtons[index]
+                guard let string = button.titleLabel?.text else { fatalError("missing title on button, title is required for width calculation") }
+                guard let font = button.titleLabel?.font else { fatalError("missing dont on button, title is required for width calculation") }
+                let size = string.size(withAttributes: [NSAttributedString.Key.font: font])
+                if let selectedLineView = self.selectedLineView {
+                    self.selectedLineViewWidthAnchor?.isActive = false
+                    self.selectedLineViewWidthAnchor = selectedLineView.widthAnchor.constraint(equalToConstant: size.width)
+                    self.selectedLineViewWidthAnchor?.isActive = true
+                }
+            }
+        }
+        collectionView.isPagingEnabled = true
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        collectionView.collectionViewLayout = layout
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.dataSource = self
+        collectionView.delegate = self
+    }
+    
     private func setupPages(views: [UIView], on scrollView: UIScrollView) {
         scrollView.viewWithTag(123)?.removeFromSuperview()
         let bgView = UIView()
@@ -376,3 +455,55 @@ extension TabPage {
     }
     
 }
+
+extension TabPage: UICollectionViewDataSource {
+    
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return itemTitles?.count ?? 0
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        return collectionCells?[indexPath.row] ?? UICollectionViewCell()
+    }
+    
+}
+
+extension TabPage: UICollectionViewDelegate {
+    
+//    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        guard let itemTitles = itemTitles, let segmentButtons = segmentButtons else { return }
+//        
+//        selectedLineViewCenterXAnchor?.isActive = false
+//        let constant = (frame.size.width / CGFloat(itemTitles.count * 2)) * CGFloat(((scrollView.contentOffset.x / frame.width) * 2) + 1)
+//        selectedLineViewCenterXAnchor = selectedLineView.centerXAnchor.constraint(equalTo: leftAnchor, constant: constant)
+//        selectedLineViewCenterXAnchor?.isActive = true
+//        
+//        let index = Int(constant / (frame.width / CGFloat(itemTitles.count)))
+//        guard index != selectedIndex else { return }
+//        selectedIndex = index
+//        
+//        if indicatorSizeFitTitleWidth {
+//            let button = segmentButtons[index]
+//            guard let string = button.titleLabel?.text else { fatalError("missing title on button, title is required for width calculation") }
+//            guard let font = button.titleLabel?.font else { fatalError("missing dont on button, title is required for width calculation") }
+//            let size = string.size(withAttributes: [NSAttributedString.Key.font: font])
+//            selectedLineViewWidthAnchor?.isActive = false
+//            selectedLineViewWidthAnchor = selectedLineView?.widthAnchor.constraint(equalToConstant: size.width)
+//            selectedLineViewWidthAnchor?.isActive = true
+//        }
+//        segmentViewAction?(index)
+//    }
+    
+}
+
+extension TabPage: UICollectionViewDelegateFlowLayout {
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return collectionView.frame.size
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
+}
+
