@@ -1,0 +1,4 @@
+framework module SwiftTabPager {
+  header "SwiftTabPager-Swift.h"
+  requires objc
+}
