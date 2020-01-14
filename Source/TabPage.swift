@@ -137,8 +137,8 @@ public class TabPage: UIView {
     
     public func setWithControllers(data: [(title: String, controller: UIViewController)], on scrollView: UIScrollView, delegate: TabPageDelegate) {
         self.tabPageDelegate = delegate
-        setWithControllers(data: data, on: scrollView) { (index) in
-            self.tabPageDelegate?.tabPage(didSelectAt: index)
+        setWithControllers(data: data, on: scrollView) { [weak self] (index) in
+            self?.tabPageDelegate?.tabPage(didSelectAt: index)
         }
     }
     
@@ -151,8 +151,8 @@ public class TabPage: UIView {
     
     public func setWithViews(data: [(title: String, view: UIView)], on scrollView: UIScrollView, delegate: TabPageDelegate) {
         self.tabPageDelegate = delegate
-        setWithViews(data: data, on: scrollView) { (index) in
-            self.tabPageDelegate?.tabPage(didSelectAt: index)
+        setWithViews(data: data, on: scrollView) { [weak self] (index) in
+            self?.tabPageDelegate?.tabPage(didSelectAt: index)
         }
     }
     
@@ -165,14 +165,8 @@ public class TabPage: UIView {
     
     public func setWithCollectionViewCells(data: [(title: String, cell: UICollectionViewCell)], on collectionView: UICollectionView, delegate: TabPageDelegate) {
         self.tabPageDelegate = delegate
-        setWithCollectionViewCells(data: data, on: collectionView) { (index) in
-            self.tabPageDelegate?.tabPage(didSelectAt: index)
-        }
-    }
-    
-    public override func willMove(toWindow newWindow: UIWindow?) {
-        if newWindow == nil {
-            offsetToken?.invalidate()
+        setWithCollectionViewCells(data: data, on: collectionView) { [weak self] (index) in
+            self?.tabPageDelegate?.tabPage(didSelectAt: index)
         }
     }
     
@@ -328,7 +322,7 @@ extension TabPage {
     private func setupScrollView() {
         guard let scrollView = scrollView else { return }
         offsetToken = scrollView.observe(\.contentOffset) { [weak self] (scrollView, _) in
-            guard let self = self else { return }
+            guard let self = self, self.superview != nil else { return }
             guard let itemTitles = self.itemTitles, let segmentButtons = self.segmentButtons else { return }
             let contentOffset = scrollView.contentOffset
             let constant = (scrollView.frame.size.width / CGFloat(itemTitles.count * 2)) * CGFloat(((contentOffset.x / scrollView.frame.width) * 2) + 1)
@@ -362,7 +356,7 @@ extension TabPage {
     private func setupCollectionView() {
         guard let collectionView = collectionView else { return }
         offsetToken = collectionView.observe(\.contentOffset) { [weak self] (scrollView, _) in
-            guard let self = self else { return }
+            guard let self = self, self.superview != nil else { return }
             guard let itemTitles = self.itemTitles, let segmentButtons = self.segmentButtons else { return }
             let contentOffset = scrollView.contentOffset
             let constant = (scrollView.frame.size.width / CGFloat(itemTitles.count * 2)) * CGFloat(((contentOffset.x / scrollView.frame.width) * 2) + 1)
