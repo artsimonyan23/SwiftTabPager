@@ -10,7 +10,6 @@ import UIKit
 
 @IBDesignable
 public class TabPage: UIView {
-    
     @IBInspectable public var selectedTextColor: UIColor = .black { didSet { createButtons() } }
 
     @IBInspectable public var selectedBackgroundColor: UIColor = .white { didSet { createButtons() } }
@@ -20,21 +19,21 @@ public class TabPage: UIView {
     @IBInspectable public var selectedBorderCornerRadius: CGFloat = 0 { didSet { createButtons() } }
 
     @IBInspectable public var selectedBorderColor: UIColor = .black { didSet { createButtons() } }
-    
+
     @IBInspectable public var selectedTextFont: UIFont? { didSet { createButtons() } }
 
     @IBInspectable public var unselectedTextColor: UIColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2) { didSet { createButtons() } }
 
     @IBInspectable public var unselectedBackgroundColor: UIColor = .white { didSet { createButtons() } }
-    
+
     @IBInspectable public var unselectedBorderWidth: CGFloat = 0 { didSet { createButtons() } }
 
     @IBInspectable public var unselectedBorderCornerRadius: CGFloat = 0 { didSet { createButtons() } }
 
     @IBInspectable public var unselectedBorderColor: UIColor = .black { didSet { createButtons() } }
-    
+
     @IBInspectable public var unselectedTextFont: UIFont? { didSet { createButtons() } }
-    
+
     @IBInspectable public var indicatorColor: UIColor = UIColor.black {
         didSet {
             createSelectedLine()
@@ -96,28 +95,28 @@ public class TabPage: UIView {
     @IBInspectable public var verticalSpacing: CGFloat = 0 { didSet { createButtons() } }
 
     @IBInspectable public var barBorderWidth: CGFloat {
-        set { layer.borderWidth = newValue  }
+        set { layer.borderWidth = newValue }
         get { return layer.borderWidth }
     }
 
     @IBInspectable public var barBorderCornerRadius: CGFloat {
-        set { layer.cornerRadius = newValue  }
+        set { layer.cornerRadius = newValue }
         get { return layer.cornerRadius }
     }
 
     @IBInspectable public var barBorderColor: UIColor {
-        set { layer.borderColor = newValue.cgColor  }
+        set { layer.borderColor = newValue.cgColor }
         get { return UIColor(cgColor: layer.borderColor!) }
     }
 
     @IBInspectable public var animationDuration: Double = 0.2
 
-    public typealias SegmentedViewHandler = ((_ selectedIndex: Int) -> Void)
-    public typealias SegmentedViewHandlerCell = ((_ selectedIndexPath: IndexPath) -> UICollectionViewCell)
+    public typealias SegmentedViewHandler = (_ selectedIndex: Int) -> ()
+    public typealias SegmentedViewHandlerCell = (_ selectedIndexPath: IndexPath) -> UICollectionViewCell
 
     public var segmentButtons: [UIButton]?
 
-    public override func prepareForInterfaceBuilder() {
+    override public func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         setWithTitles(titles: ["One", "Two", "Three"]) { _ in }
     }
@@ -126,55 +125,58 @@ public class TabPage: UIView {
         itemTitles = titles.filter({ !$0.isEmpty })
         segmentViewAction = completion
     }
-    
+
     public func setWithControllers(data: [(title: String, controller: UIViewController)], on scrollView: UIScrollView, completion: @escaping SegmentedViewHandler) {
-        itemTitles = data.compactMap({$0.title})
+        itemTitles = data.compactMap({ $0.title })
         segmentViewAction = completion
         self.scrollView = scrollView
-        self.childControllers = data.compactMap({$0.controller})
-        setupPages(views: data.compactMap({$0.controller.view}), on: scrollView)
+        childControllers = data.compactMap({ $0.controller })
+        setupPages(views: data.compactMap({ $0.controller.view }), on: scrollView)
     }
-    
+
     public func setWithControllers(data: [(title: String, controller: UIViewController)], on scrollView: UIScrollView, delegate: TabPageDelegate) {
-        self.tabPageDelegate = delegate
-        setWithControllers(data: data, on: scrollView) { [weak self] (index) in
+        tabPageDelegate = delegate
+        setWithControllers(data: data, on: scrollView) { [weak self] index in
             self?.tabPageDelegate?.tabPage(didSelectAt: index)
         }
     }
-    
+
     public func setWithViews(data: [(title: String, view: UIView)], on scrollView: UIScrollView, completion: @escaping SegmentedViewHandler) {
-        itemTitles = data.compactMap({$0.title})
+        itemTitles = data.compactMap({ $0.title })
         segmentViewAction = completion
         self.scrollView = scrollView
-        setupPages(views: data.compactMap({$0.view}), on: scrollView)
+        setupPages(views: data.compactMap({ $0.view }), on: scrollView)
     }
-    
+
     public func setWithViews(data: [(title: String, view: UIView)], on scrollView: UIScrollView, delegate: TabPageDelegate) {
-        self.tabPageDelegate = delegate
-        setWithViews(data: data, on: scrollView) { [weak self] (index) in
+        tabPageDelegate = delegate
+        setWithViews(data: data, on: scrollView) { [weak self] index in
             self?.tabPageDelegate?.tabPage(didSelectAt: index)
         }
     }
-    
+
     public func setWithCollectionViewCells(data: [(title: String, cell: UICollectionViewCell)], on collectionView: UICollectionView, completion: @escaping SegmentedViewHandler) {
-        itemTitles = data.map({$0.title})
+        itemTitles = data.map({ $0.title })
         self.collectionView = collectionView
-        collectionCells = data.map({$0.cell})
+        collectionCells = data.map({ $0.cell })
         segmentViewAction = completion
     }
-    
+
     public func setWithCollectionViewCells(data: [(title: String, cell: UICollectionViewCell)], on collectionView: UICollectionView, delegate: TabPageDelegate) {
-        self.tabPageDelegate = delegate
-        setWithCollectionViewCells(data: data, on: collectionView) { [weak self] (index) in
+        tabPageDelegate = delegate
+        setWithCollectionViewCells(data: data, on: collectionView) { [weak self] index in
             self?.tabPageDelegate?.tabPage(didSelectAt: index)
         }
     }
-    
-    
+
+    public func select(index: Int) {
+        select(index: index, animation: false)
+    }
+
     // private properties
-    
+
     private weak var tabPageDelegate: TabPageDelegate?
-    
+
     private var itemTitles: [String]? {
         didSet {
             createButtons()
@@ -185,7 +187,7 @@ public class TabPage: UIView {
             scrollSelectedLineToIndex(index: 0)
         }
     }
-    
+
     private var collectionCells: [UICollectionViewCell]?
 
     private var selectedIndex = 0 {
@@ -197,7 +199,7 @@ public class TabPage: UIView {
         }
         didSet {
             if selectedIndex != oldValue {
-                self.segmentViewAction?(selectedIndex)
+                segmentViewAction?(selectedIndex)
             }
             guard segmentButtons?.count ?? 0 > oldValue, oldValue >= 0 else { return }
             if let previewButton = segmentButtons?[oldValue] {
@@ -215,7 +217,7 @@ public class TabPage: UIView {
 
     private var childControllers: [UIViewController]? {
         didSet {
-            oldValue?.forEach({ (controller) in
+            oldValue?.forEach({ controller in
                 controller.removeFromParent()
             })
             childControllers?.forEach { controller in
@@ -230,18 +232,16 @@ public class TabPage: UIView {
             setupScrollView()
         }
     }
-    
+
     private var collectionView: UICollectionView? {
         didSet {
             offsetToken?.invalidate()
             setupCollectionView()
         }
     }
-
 }
 
 extension TabPage {
-    
     private func createButtons() {
         guard let itemTitles = itemTitles else { return }
         segmentButtons = []
@@ -280,18 +280,35 @@ extension TabPage {
             }
         }
     }
-    
+
     @objc private func appNavigationButtonAction(_ sender: UIButton) {
-        selectedIndex = sender.tag - 1
-        if let scrollView = scrollView {
-            var frame = scrollView.bounds
-            frame.origin.x = frame.size.width * CGFloat(selectedIndex)
-            scrollView.scrollRectToVisible(frame, animated: true)
+        select(index: sender.tag - 1, animation: true)
+    }
+
+    private func select(index: Int, animation: Bool) {
+        let select = {
+            self.selectedIndex = index
+            if let scrollView = self.scrollView {
+                if !animation {
+                    scrollView.layoutIfNeeded()
+                }
+                var frame = scrollView.bounds
+                frame.origin.x = frame.size.width * CGFloat(self.selectedIndex)
+                print(frame.origin.x)
+                scrollView.scrollRectToVisible(frame, animated: animation)
+            } else {
+                UIView.animate(withDuration: animation ? self.animationDuration : 0, delay: 0, options: .curveEaseOut, animations: {
+                    self.scrollSelectedLineToIndex(index: self.selectedIndex)
+                    self.layoutSubviews()
+                }, completion: nil)
+            }
+        }
+        if animation {
+            select()
         } else {
-            UIView.animate(withDuration: animationDuration, delay: 0, options: .curveEaseOut, animations: {
-                self.scrollSelectedLineToIndex(index: self.selectedIndex)
-                self.layoutSubviews()
-            }, completion: nil)
+            DispatchQueue.main.async {
+                select()
+            }
         }
     }
 
@@ -318,10 +335,10 @@ extension TabPage {
             selectedLineView.topAnchor.constraint(equalTo: topAnchor, constant: indicatorOffset).isActive = true
         }
     }
-    
+
     private func setupScrollView() {
         guard let scrollView = scrollView else { return }
-        offsetToken = scrollView.observe(\.contentOffset) { [weak self] (scrollView, _) in
+        offsetToken = scrollView.observe(\.contentOffset) { [weak self] scrollView, _ in
             guard let self = self, self.superview != nil else { return }
             guard let itemTitles = self.itemTitles, let segmentButtons = self.segmentButtons else { return }
             let contentOffset = scrollView.contentOffset
@@ -352,10 +369,10 @@ extension TabPage {
         scrollView.showsHorizontalScrollIndicator = false
         scrollView.showsVerticalScrollIndicator = false
     }
-    
+
     private func setupCollectionView() {
         guard let collectionView = collectionView else { return }
-        offsetToken = collectionView.observe(\.contentOffset) { [weak self] (scrollView, _) in
+        offsetToken = collectionView.observe(\.contentOffset) { [weak self] scrollView, _ in
             guard let self = self, self.superview != nil else { return }
             guard let itemTitles = self.itemTitles, let segmentButtons = self.segmentButtons else { return }
             let contentOffset = scrollView.contentOffset
@@ -391,7 +408,7 @@ extension TabPage {
         collectionView.dataSource = self
         collectionView.delegate = self
     }
-    
+
     private func setupPages(views: [UIView], on scrollView: UIScrollView) {
         scrollView.viewWithTag(123)?.removeFromSuperview()
         let bgView = UIView()
@@ -447,35 +464,31 @@ extension TabPage {
             selectedLineViewWidthAnchor?.isActive = true
         }
     }
-    
 }
 
 extension TabPage: UICollectionViewDataSource {
-    
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return itemTitles?.count ?? 0
     }
-    
+
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         return collectionCells?[indexPath.row] ?? UICollectionViewCell()
     }
-    
 }
 
 extension TabPage: UICollectionViewDelegate {
-    
 //    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
 //        guard let itemTitles = itemTitles, let segmentButtons = segmentButtons else { return }
-//        
+//
 //        selectedLineViewCenterXAnchor?.isActive = false
 //        let constant = (frame.size.width / CGFloat(itemTitles.count * 2)) * CGFloat(((scrollView.contentOffset.x / frame.width) * 2) + 1)
 //        selectedLineViewCenterXAnchor = selectedLineView.centerXAnchor.constraint(equalTo: leftAnchor, constant: constant)
 //        selectedLineViewCenterXAnchor?.isActive = true
-//        
+//
 //        let index = Int(constant / (frame.width / CGFloat(itemTitles.count)))
 //        guard index != selectedIndex else { return }
 //        selectedIndex = index
-//        
+//
 //        if indicatorSizeFitTitleWidth {
 //            let button = segmentButtons[index]
 //            guard let string = button.titleLabel?.text else { fatalError("missing title on button, title is required for width calculation") }
@@ -487,17 +500,14 @@ extension TabPage: UICollectionViewDelegate {
 //        }
 //        segmentViewAction?(index)
 //    }
-    
 }
 
 extension TabPage: UICollectionViewDelegateFlowLayout {
-    
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return collectionView.frame.size
     }
-    
+
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
 }
-
