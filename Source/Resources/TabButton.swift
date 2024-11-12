@@ -9,7 +9,6 @@
 import UIKit
 
 class TabButton: UIButton {
-    
     var selectedTextColor: UIColor? { willSet { setTitleColor(newValue, for: .normal) } }
     var selectedBackgroundColor: UIColor? { willSet { backgroundColor = newValue } }
     var selectedBorderWidth: CGFloat? { willSet { if let newValue = newValue { layer.borderWidth = newValue } } }
@@ -22,13 +21,13 @@ class TabButton: UIButton {
     var unselectedBorderCornerRadius: CGFloat? { willSet { if let newValue = newValue { layer.cornerRadius = newValue } } }
     var unselectedBorderColor: UIColor? { willSet { layer.borderColor = newValue?.cgColor } }
     var unselectedTextFont: UIFont? { willSet { titleLabel?.font = newValue } }
-    
+
     override var isEnabled: Bool {
         didSet {
             setButton(isEnabled: isEnabled)
         }
     }
-    
+
     private func setButton(isEnabled: Bool) {
         if !isEnabled {
             setTitleColor(selectedTextColor, for: .normal)
@@ -54,5 +53,4 @@ class TabButton: UIButton {
             titleLabel?.font = unselectedTextFont
         }
     }
-
 }

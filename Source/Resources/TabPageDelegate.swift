@@ -9,7 +9,5 @@
 import UIKit
 
 public protocol TabPageDelegate: NSObjectProtocol {
-    
     func tabPage(didSelectAt index: Int)
-        
 }

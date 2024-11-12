@@ -114,7 +114,7 @@ public class TabPage: UIView {
     public typealias SegmentedViewHandler = (_ selectedIndex: Int) -> ()
     public typealias SegmentedViewHandlerCell = (_ selectedIndexPath: IndexPath) -> UICollectionViewCell
 
-    public var segmentButtons: [UIButton]?
+    public var segmentButtons = [UIButton]()
 
     override public func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
@@ -191,19 +191,14 @@ public class TabPage: UIView {
     private var collectionCells: [UICollectionViewCell]?
 
     private var selectedIndex = 0 {
-        willSet {
-            guard segmentButtons?.count ?? 0 > newValue, newValue >= 0 else { return }
-            if let button = segmentButtons?[newValue] {
-                button.isEnabled = false
-            }
-        }
         didSet {
-            if selectedIndex != oldValue {
-                segmentViewAction?(selectedIndex)
+            guard selectedIndex != oldValue else { return }
+            segmentViewAction?(selectedIndex)
+            if segmentButtons.count > selectedIndex, selectedIndex >= 0 {
+                segmentButtons[selectedIndex].isEnabled = false
             }
-            guard segmentButtons?.count ?? 0 > oldValue, oldValue >= 0 else { return }
-            if let previewButton = segmentButtons?[oldValue] {
-                previewButton.isEnabled = true
+            if segmentButtons.count > oldValue, oldValue >= 0 {
+                segmentButtons[oldValue].isEnabled = true
             }
         }
     }
@@ -243,12 +238,14 @@ public class TabPage: UIView {
 
 extension TabPage {
     private func createButtons() {
+        segmentButtons.forEach { $0.removeFromSuperview() }
         guard let itemTitles = itemTitles else { return }
         segmentButtons = []
         for i in 0 ..< itemTitles.count {
             let button = TabButton()
+            button.tag = i + 1
             addSubview(button)
-            segmentButtons?.append(button)
+            segmentButtons.append(button)
             button.selectedTextColor = selectedTextColor
             button.selectedBackgroundColor = selectedBackgroundColor
             button.selectedBorderWidth = selectedBorderWidth
@@ -261,7 +258,7 @@ extension TabPage {
             button.unselectedBorderCornerRadius = unselectedBorderCornerRadius
             button.unselectedBorderColor = unselectedBorderColor
             button.unselectedTextFont = unselectedTextFont
-            button.tag = i + 1
+            button.isEnabled = selectedIndex != i
             button.addTarget(self, action: #selector(appNavigationButtonAction(_:)), for: .touchUpInside)
             button.setTitle(itemTitles[i], for: .normal)
             button.translatesAutoresizingMaskIntoConstraints = false
@@ -269,7 +266,6 @@ extension TabPage {
             button.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -verticalSpacing).isActive = true
             if i == 0 {
                 button.leftAnchor.constraint(equalTo: leftAnchor, constant: horizontalSpacingFromBorders ? horizontalSpacing : 0).isActive = true
-                button.isEnabled = false
             } else {
                 let previewButton = viewWithTag(i)!
                 button.leftAnchor.constraint(equalTo: previewButton.rightAnchor, constant: horizontalSpacing).isActive = true
@@ -315,7 +311,7 @@ extension TabPage {
     private func createSelectedLine() {
         selectedLineView?.removeFromSuperview()
         selectedLineView = nil
-        guard let itemTitles = itemTitles, itemTitles.count > 0, indicatorColor != .clear, let button = segmentButtons?.first else { return }
+        guard let itemTitles = itemTitles, itemTitles.count > 0, indicatorColor != .clear, let button = segmentButtons.first else { return }
         selectedLineView = UIView()
         let selectedLineView = self.selectedLineView!
         addSubview(selectedLineView)
@@ -340,7 +336,7 @@ extension TabPage {
         guard let scrollView = scrollView else { return }
         offsetToken = scrollView.observe(\.contentOffset) { [weak self] scrollView, _ in
             guard let self = self, self.superview != nil else { return }
-            guard let itemTitles = self.itemTitles, let segmentButtons = self.segmentButtons else { return }
+            guard let itemTitles = self.itemTitles else { return }
             let contentOffset = scrollView.contentOffset
             let constant = (scrollView.frame.size.width / CGFloat(itemTitles.count * 2)) * CGFloat(((contentOffset.x / scrollView.frame.width) * 2) + 1)
             if let selectedLineView = self.selectedLineView {
@@ -354,7 +350,7 @@ extension TabPage {
                 self.selectedIndex = index
             }
             if self.indicatorSizeFitTitleWidth {
-                let button = segmentButtons[index]
+                let button = self.segmentButtons[index]
                 guard let string = button.titleLabel?.text else { fatalError("missing title on button, title is required for width calculation") }
                 guard let font = button.titleLabel?.font else { fatalError("missing dont on button, title is required for width calculation") }
                 let size = string.size(withAttributes: [NSAttributedString.Key.font: font])
@@ -374,7 +370,7 @@ extension TabPage {
         guard let collectionView = collectionView else { return }
         offsetToken = collectionView.observe(\.contentOffset) { [weak self] scrollView, _ in
             guard let self = self, self.superview != nil else { return }
-            guard let itemTitles = self.itemTitles, let segmentButtons = self.segmentButtons else { return }
+            guard let itemTitles = self.itemTitles else { return }
             let contentOffset = scrollView.contentOffset
             let constant = (scrollView.frame.size.width / CGFloat(itemTitles.count * 2)) * CGFloat(((contentOffset.x / scrollView.frame.width) * 2) + 1)
             if let selectedLineView = self.selectedLineView {
@@ -388,7 +384,7 @@ extension TabPage {
                 self.selectedIndex = index
             }
             if self.indicatorSizeFitTitleWidth {
-                let button = segmentButtons[index]
+                let button = self.segmentButtons[index]
                 guard let string = button.titleLabel?.text else { fatalError("missing title on button, title is required for width calculation") }
                 guard let font = button.titleLabel?.font else { fatalError("missing dont on button, title is required for width calculation") }
                 let size = string.size(withAttributes: [NSAttributedString.Key.font: font])
@@ -446,7 +442,6 @@ extension TabPage {
 
     private func scrollSelectedLineToIndex(index: Int) {
         guard let selectedLineView = selectedLineView else { return }
-        guard let segmentButtons = segmentButtons else { return }
 
         let button = segmentButtons[index]
 
