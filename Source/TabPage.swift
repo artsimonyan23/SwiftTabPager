@@ -173,7 +173,79 @@ public class TabPage: UIView {
         select(index: index, animation: false)
     }
 
+    override public init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+
+    init() {
+        super.init(frame: .zero)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+    }
+
     // private properties
+
+    private var lastTouchPoint: CGPoint = .zero
+    private var touchPointOffset: CGPoint = .zero
+    
+    private func setup() {
+        let pan = UIPanGestureRecognizer(target: self, action: #selector(panAction(_:)))
+    }
+
+    @objc
+    private func panAction(_ gestureRecognizer: UIPanGestureRecognizer) {
+        let state = gestureRecognizer.state
+        let point = gestureRecognizer.location(in: self)
+
+        switch state {
+        case .began:
+            touchBegin(at: point)
+        case .ended, .cancelled:
+            endTouch(at: point)
+        default:
+            panAction(at: point)
+        }
+    }
+
+    private func touchBegin(at point: CGPoint) {
+        lastTouchPoint = point
+        let index = switchIndexForSelected(layout.index(for: point))
+        isSelectionViewTouched = index == selectedIndex
+        notifyBeginTouch(for: index)
+    }
+
+    private func panAction(at point: CGPoint) {
+        if !isDragEnabled || !isSelectionViewTouched {
+            isValidTouch = PointInsideSegmentControlCheckBuilder(viewBounds: bounds, point: point).build()
+            return
+        }
+        prepareTouchPointOffset(for: point)
+        let pointToNotJumpViewWhenDragged = CGPoint(x: point.x + touchPointOffset.x, y: touchPointOffset.x)
+        let isSwipeToLeft = point.x < lastTouchPoint.x
+        layout.layoutSelectionViewAndMaskView(for: pointToNotJumpViewWhenDragged, whenUserMoveFingerToLeft: isSwipeToLeft)
+        lastTouchPoint = point
+        notifyDragInProgress(at: point)
+    }
+
+    private func endTouch(at point: CGPoint) {
+        isSelectionViewTouched = false
+        touchPointOffset = .zero
+
+        if !isValidTouch { return }
+        let newIndex = switchIndexForSelected(layout.index(for: point))
+        let allowToMoveToNewIndex = delegate?.segmentedView(self, shouldMoveAt: newIndex) ?? true
+        if allowToMoveToNewIndex {
+            selectedIndex = newIndex
+            notifyEndTouch()
+        }
+        updateSelectionViewFrame(at: selectedIndex)
+        configureSelectionView(at: selectedIndex)
+    }
 
     private weak var tabPageDelegate: TabPageDelegate?
 
