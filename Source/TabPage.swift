@@ -252,11 +252,10 @@ public class TabPage: UIView {
 
 extension TabPage {
     private func createButtons() {
-        if let tabScrollView {
+        if let tabScrollView, tabScrollView.superview == nil {
             addSubview(tabScrollView)
             tabScrollView.showsHorizontalScrollIndicator = false
             tabScrollView.showsVerticalScrollIndicator = false
-            tabScrollView.alwaysBounceHorizontal = true
             tabScrollView.translatesAutoresizingMaskIntoConstraints = false
             tabScrollView.topAnchor.constraint(equalTo: topAnchor).isActive = true
             tabScrollView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
