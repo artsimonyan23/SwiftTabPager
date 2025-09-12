@@ -111,6 +111,18 @@ public class TabPage: UIView {
 
     @IBInspectable public var animationDuration: Double = 0.2
 
+    public var tabWidth: TabWidth = .equal
+    public var isScrollable: Bool = false {
+        didSet {
+            tabScrollView = isScrollable ? UIScrollView() : nil
+        }
+    }
+
+    public enum TabWidth {
+        case equal
+        case auto
+    }
+
     public typealias SegmentedViewHandler = (_ selectedIndex: Int) -> ()
     public typealias SegmentedViewHandlerCell = (_ selectedIndexPath: IndexPath) -> UICollectionViewCell
 
@@ -221,6 +233,8 @@ public class TabPage: UIView {
         }
     }
 
+    private var tabScrollView: UIScrollView?
+
     private var scrollView: UIScrollView? {
         didSet {
             offsetToken?.invalidate()
@@ -238,13 +252,25 @@ public class TabPage: UIView {
 
 extension TabPage {
     private func createButtons() {
+        if let tabScrollView {
+            addSubview(tabScrollView)
+            tabScrollView.showsHorizontalScrollIndicator = false
+            tabScrollView.showsVerticalScrollIndicator = false
+            tabScrollView.alwaysBounceHorizontal = true
+            tabScrollView.translatesAutoresizingMaskIntoConstraints = false
+            tabScrollView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+            tabScrollView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+            tabScrollView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+            tabScrollView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        }
+        let bgView = tabScrollView ?? self
         segmentButtons.forEach { $0.removeFromSuperview() }
         guard let itemTitles = itemTitles else { return }
         segmentButtons = []
         for i in 0 ..< itemTitles.count {
             let button = TabButton()
             button.tag = i + 1
-            addSubview(button)
+            bgView.addSubview(button)
             segmentButtons.append(button)
             button.selectedTextColor = selectedTextColor
             button.selectedBackgroundColor = selectedBackgroundColor
@@ -261,18 +287,21 @@ extension TabPage {
             button.isEnabled = selectedIndex != i
             button.addTarget(self, action: #selector(appNavigationButtonAction(_:)), for: .touchUpInside)
             button.setTitle(itemTitles[i], for: .normal)
+            button.titleLabel?.textAlignment = .center
             button.translatesAutoresizingMaskIntoConstraints = false
-            button.topAnchor.constraint(equalTo: topAnchor, constant: verticalSpacing).isActive = true
-            button.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -verticalSpacing).isActive = true
+            button.topAnchor.constraint(equalTo: bgView.topAnchor, constant: verticalSpacing).isActive = true
+            button.bottomAnchor.constraint(equalTo: bgView.bottomAnchor, constant: -verticalSpacing).isActive = true
             if i == 0 {
-                button.leftAnchor.constraint(equalTo: leftAnchor, constant: horizontalSpacingFromBorders ? horizontalSpacing : 0).isActive = true
+                button.leftAnchor.constraint(equalTo: bgView.leftAnchor, constant: horizontalSpacingFromBorders ? horizontalSpacing : 0).isActive = true
             } else {
                 let previewButton = viewWithTag(i)!
                 button.leftAnchor.constraint(equalTo: previewButton.rightAnchor, constant: horizontalSpacing).isActive = true
-                button.widthAnchor.constraint(equalTo: previewButton.widthAnchor).isActive = true
+                if tabWidth == .equal {
+                    button.widthAnchor.constraint(equalTo: previewButton.widthAnchor).isActive = true
+                }
             }
             if i == itemTitles.count - 1 {
-                button.rightAnchor.constraint(equalTo: rightAnchor, constant: -(horizontalSpacingFromBorders ? horizontalSpacing : 0)).isActive = true
+                button.rightAnchor.constraint(equalTo: bgView.rightAnchor, constant: -(horizontalSpacingFromBorders ? horizontalSpacing : 0)).isActive = true
             }
         }
     }
@@ -284,6 +313,7 @@ extension TabPage {
     private func select(index: Int, animation: Bool) {
         let select = {
             self.selectedIndex = index
+            self.tabScrollView?.scrollRectToVisible(self.segmentButtons[index].frame, animated: true)
             if let scrollView = self.scrollView {
                 if !animation {
                     scrollView.layoutIfNeeded()
