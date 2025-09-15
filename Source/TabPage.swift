@@ -111,10 +111,12 @@ public class TabPage: UIView {
 
     @IBInspectable public var animationDuration: Double = 0.2
 
-    public var tabWidth: TabWidth = .equal
+    public var tabWidth: TabWidth = .equal { didSet { createButtons() } }
+
     public var isScrollable: Bool = false {
         didSet {
             tabScrollView = isScrollable ? UIScrollView() : nil
+            createButtons()
         }
     }
 
@@ -312,7 +314,14 @@ extension TabPage {
     private func select(index: Int, animation: Bool) {
         let select = {
             self.selectedIndex = index
-            self.tabScrollView?.scrollRectToVisible(self.segmentButtons[index].frame, animated: true)
+            var frame = self.segmentButtons[index].frame
+            if index == 0 || index == self.segmentButtons.count - 1 {
+                frame.size.width += (self.horizontalSpacingFromBorders ? self.horizontalSpacing : 0)
+                if index == 0 {
+                    frame.origin.x = 0
+                }
+            }
+            self.tabScrollView?.scrollRectToVisible(frame, animated: true)
             if let scrollView = self.scrollView {
                 if !animation {
                     scrollView.layoutIfNeeded()
