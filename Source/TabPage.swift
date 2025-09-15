@@ -314,13 +314,15 @@ extension TabPage {
     private func select(index: Int, animation: Bool) {
         let select = {
             self.selectedIndex = index
-            var frame = self.segmentButtons[index].frame
-            let space = self.horizontalSpacingFromBorders ? self.horizontalSpacing : 0
-            if space != 0 {
-                frame.size.width += (2 * space)
-                frame.origin.x -= space
+            if let tabScrollView = self.tabScrollView {
+                var frame = self.segmentButtons[index].frame
+                let space = self.horizontalSpacingFromBorders ? self.horizontalSpacing : 0
+                if space != 0 {
+                    frame.size.width += (2 * space)
+                    frame.origin.x -= space
+                }
+                tabScrollView.scrollRectToVisible(frame, animated: true)
             }
-            self.tabScrollView?.scrollRectToVisible(frame, animated: true)
             if let scrollView = self.scrollView {
                 if !animation {
                     scrollView.layoutIfNeeded()
