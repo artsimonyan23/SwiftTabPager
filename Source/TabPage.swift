@@ -315,11 +315,10 @@ extension TabPage {
         let select = {
             self.selectedIndex = index
             var frame = self.segmentButtons[index].frame
-            if index == 0 || index == self.segmentButtons.count - 1 {
-                frame.size.width += (self.horizontalSpacingFromBorders ? self.horizontalSpacing : 0)
-                if index == 0 {
-                    frame.origin.x = 0
-                }
+            let space = self.horizontalSpacingFromBorders ? self.horizontalSpacing : 0
+            if space != 0 {
+                frame.size.width += (2 * space)
+                frame.origin.x -= space
             }
             self.tabScrollView?.scrollRectToVisible(frame, animated: true)
             if let scrollView = self.scrollView {
