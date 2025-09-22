@@ -313,6 +313,7 @@ extension TabPage {
 
     private func select(index: Int, animation: Bool) {
         let select = {
+            let index = max(0, min(index, self.itemTitles?.count ?? 1 - 1))
             self.selectedIndex = index
             if let tabScrollView = self.tabScrollView {
                 var frame = self.segmentButtons[index].frame
