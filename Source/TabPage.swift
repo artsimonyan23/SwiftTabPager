@@ -135,6 +135,10 @@ public class TabPage: UIView {
         setWithTitles(titles: ["One", "Two", "Three"]) { _ in }
     }
 
+    public func onTap(completion: @escaping SegmentedViewHandler) {
+        buttonAction = completion
+    }
+
     public func setWithTitles(titles: [String], completion: @escaping SegmentedViewHandler) {
         itemTitles = titles.filter({ !$0.isEmpty })
         segmentViewAction = completion
@@ -218,6 +222,7 @@ public class TabPage: UIView {
     }
 
     private var segmentViewAction: SegmentedViewHandler?
+    private var buttonAction: SegmentedViewHandler?
     private var selectedLineView: UIView?
     private var selectedLineViewCenterXAnchor: NSLayoutConstraint?
     private var selectedLineViewWidthAnchor: NSLayoutConstraint?
@@ -309,6 +314,7 @@ extension TabPage {
 
     @objc private func appNavigationButtonAction(_ sender: UIButton) {
         select(index: sender.tag - 1, animation: true)
+        buttonAction?(selectedIndex)
     }
 
     private func select(index: Int, animation: Bool) {
