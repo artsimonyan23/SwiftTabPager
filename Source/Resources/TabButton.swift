@@ -25,7 +25,23 @@ class TabButton: UIButton {
     override var isEnabled: Bool {
         didSet {
             setButton(isEnabled: isEnabled)
+            updateAccessibility()
         }
+    }
+
+    override func setTitle(_ title: String?, for state: UIControl.State) {
+        super.setTitle(title, for: state)
+        updateAccessibility()
+    }
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        configureAccessibility()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        configureAccessibility()
     }
 
     private func setButton(isEnabled: Bool) {
@@ -52,5 +68,23 @@ class TabButton: UIButton {
             layer.borderColor = unselectedBorderColor?.cgColor
             titleLabel?.font = unselectedTextFont
         }
+    }
+
+    private func configureAccessibility() {
+        isAccessibilityElement = true
+        accessibilityTraits = [.button]
+        updateAccessibility()
+    }
+
+    private func updateAccessibility() {
+        if accessibilityLabel == nil || accessibilityLabel?.isEmpty == true {
+            accessibilityLabel = title(for: .normal) ?? titleLabel?.text
+        }
+        var traits: UIAccessibilityTraits = [.button]
+        // In this control, "selected" is represented by disabling the active tab.
+        if !isEnabled {
+            traits.insert(.selected)
+        }
+        accessibilityTraits = traits
     }
 }

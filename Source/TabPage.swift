@@ -218,6 +218,7 @@ public class TabPage: UIView {
             if segmentButtons.count > oldValue, oldValue >= 0 {
                 segmentButtons[oldValue].isEnabled = true
             }
+            announceSelectedTabIfNeeded()
         }
     }
 
@@ -259,10 +260,14 @@ public class TabPage: UIView {
 
 extension TabPage {
     private func createButtons() {
+        isAccessibilityElement = false
+        accessibilityIdentifier = accessibilityIdentifier ?? "tab_page"
+
         if let tabScrollView, tabScrollView.superview == nil {
             addSubview(tabScrollView)
             tabScrollView.showsHorizontalScrollIndicator = false
             tabScrollView.showsVerticalScrollIndicator = false
+            tabScrollView.isAccessibilityElement = false
             tabScrollView.translatesAutoresizingMaskIntoConstraints = false
             tabScrollView.topAnchor.constraint(equalTo: topAnchor).isActive = true
             tabScrollView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
@@ -294,6 +299,7 @@ extension TabPage {
             button.addTarget(self, action: #selector(appNavigationButtonAction(_:)), for: .touchUpInside)
             button.setTitle(itemTitles[i], for: .normal)
             button.titleLabel?.textAlignment = .center
+            button.accessibilityIdentifier = "tab_button_\(i)"
             button.translatesAutoresizingMaskIntoConstraints = false
             button.topAnchor.constraint(equalTo: bgView.topAnchor, constant: verticalSpacing).isActive = true
             button.bottomAnchor.constraint(equalTo: bgView.bottomAnchor, constant: -verticalSpacing).isActive = true
@@ -362,6 +368,7 @@ extension TabPage {
         let selectedLineView = self.selectedLineView!
         addSubview(selectedLineView)
         selectedLineView.backgroundColor = indicatorColor
+        selectedLineView.isAccessibilityElement = false
         selectedLineView.translatesAutoresizingMaskIntoConstraints = false
         selectedLineView.heightAnchor.constraint(equalToConstant: indicatorHeight).isActive = true
         if indicatorWidth < 0 {
@@ -504,6 +511,12 @@ extension TabPage {
             selectedLineViewWidthAnchor = selectedLineView.widthAnchor.constraint(equalToConstant: size.width)
             selectedLineViewWidthAnchor?.isActive = true
         }
+    }
+
+    private func announceSelectedTabIfNeeded() {
+        guard UIAccessibility.isVoiceOverRunning else { return }
+        guard selectedIndex >= 0, selectedIndex < segmentButtons.count else { return }
+        UIAccessibility.post(notification: .layoutChanged, argument: segmentButtons[selectedIndex])
     }
 }
 
